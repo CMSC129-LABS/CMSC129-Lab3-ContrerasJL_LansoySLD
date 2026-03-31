@@ -95,7 +95,7 @@
         </div>
     </div>
 
-?   <!-- right panel (org list) -->
+   <!-- right panel (org list) -->
     <div class="flex flex-col gap-2">
 
         <!-- Active / selected row -->
