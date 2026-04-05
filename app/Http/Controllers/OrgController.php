@@ -37,11 +37,6 @@ class OrgController extends Controller
         return view('orgs.archived', compact('orgs'));
     }
 
-    public function create()
-    {
-        return view('orgs.create');
-    }
-
     public function restore($id)
     {
         $org = Organization::findOrFail($id);
@@ -49,15 +44,40 @@ class OrgController extends Controller
         return redirect()->route('orgs.archived');
     }
 
+    public function show($id)
+    {
+        $orgs = Organization::where('is_archived', false)->get();
+        $selected = Organization::findOrFail($id);
+        return view('orgs.index', compact('orgs', 'selected'));
+    }
+
+    public function archive($id)
+    {
+        Organization::findOrFail($id)->update(['is_archived' => true]);
+        return redirect()->route('orgs.index');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'type' => 'required|string',
-            'email' => 'nullable|email',
+            'name'    => 'required|string|max:255',
+            'type'    => 'required|string',
+            'email'   => 'nullable|email',
+            'logo'    => 'nullable|image|max:2048',
+            'cover'   => 'nullable|image|max:2048',
         ]);
 
-        Organization::create($request->all());
+        $data = $request->except(['logo', 'cover']);
+
+        if ($request->hasFile('logo')) {
+            $data['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        if ($request->hasFile('cover')) {
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        Organization::create($data);
         return redirect()->route('orgs.index');
     }
 }
