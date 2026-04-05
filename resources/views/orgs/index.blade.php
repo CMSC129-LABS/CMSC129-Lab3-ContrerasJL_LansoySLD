@@ -141,7 +141,7 @@
 
                     <!-- Edit -->
                     <button
-                        onclick="openEditOrgModal({{ $org->id }}, '{{ addslashes($org->name) }}', '{{ addslashes($org->description) }}', '{{ $org->status }}', '{{ $org->type }}', '{{ $org->members }}', '{{ $org->email }}')"
+                        onclick="openEditOrgModal({{ $org->id }}, '{{ addslashes($org->name) }}', '{{ addslashes($org->description) }}', '{{ $org->status }}', '{{ $org->type }}', '{{ $org->members }}', '{{ $org->email }}', '{{ $org->cover ? Storage::url($org->cover) : '' }}', '{{ $org->logo ? Storage::url($org->logo) : '' }}')"
                         class="{{ $selected && $selected->id === $org->id ? 'text-white/70' : 'text-gray-400' }}">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
                             viewBox="0 0 24 24">
@@ -178,6 +178,7 @@
 
     {{-- Modals --}}
     <x-modal-add-org />
+    <x-modal-edit-org />
 
     @push('scripts')
         <script>
@@ -191,23 +192,40 @@
             }
 
             // ── Edit Org Modal ──
-            function openEditOrgModal(id, name, description, status, type, members, email) {
+            function openEditOrgModal(id, name, description, status, type, members, email, cover, logo) {
                 document.getElementById('editOrgId').value = id;
                 document.getElementById('editOrgName').value = name;
                 document.getElementById('editOrgDesc').value = description;
                 document.getElementById('editOrgMembers').value = members;
                 document.getElementById('editOrgEmail').value = email;
 
-                // set status radio
+                // status radio
                 document.querySelectorAll('input[name="edit_status"]').forEach(r => {
                     r.checked = r.value === status;
                 });
 
-                // set type select
+                // type select
                 document.getElementById('editOrgType').value = type;
 
-                // set form action
-                document.getElementById('editOrgForm').action = `/orgs/${id}`;
+                // cover preview
+                const coverPreview = document.getElementById('editCoverPreview');
+                if (cover) {
+                    coverPreview.src = cover;
+                    coverPreview.classList.remove('hidden');
+                } else {
+                    coverPreview.src = '';
+                    coverPreview.classList.add('hidden');
+                }
+
+                // logo preview
+                const logoPreview = document.getElementById('editProfilePreview');
+                if (logo) {
+                    logoPreview.src = logo;
+                    logoPreview.classList.remove('hidden');
+                } else {
+                    logoPreview.src = '';
+                    logoPreview.classList.add('hidden');
+                }
 
                 document.getElementById('editOrgModal').classList.remove('hidden');
             }
