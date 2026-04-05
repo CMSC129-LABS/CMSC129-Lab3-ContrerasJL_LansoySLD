@@ -42,6 +42,13 @@ class OrgController extends Controller
         return view('orgs.create');
     }
 
+    public function restore($id)
+    {
+        $org = Organization::findOrFail($id);
+        $org->update(['is_archived' => false]);
+        return redirect()->route('orgs.archived');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
