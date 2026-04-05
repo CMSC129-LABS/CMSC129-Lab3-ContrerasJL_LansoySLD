@@ -139,6 +139,10 @@
                                     <input type="checkbox" name="filter_type[]" value="special_interest"
                                         class="accent-upv-green"> Special Interest
                                 </label>
+                                <label class="flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer">
+                                    <input type="checkbox" name="filter_type[]" value="other"
+                                        class="accent-upv-green"> Other
+                                </label>
                             </div>
                         </div>
 
@@ -169,8 +173,8 @@
             </a>
 
             <!-- add org -->
-            <button onClick="openAddOrgModal()"
-                class="flex items-center gap-1.5 bg-upv-green text-white text-sm font-medium px-4 py-1.5 rounded-full no-underline whitespace-nowrap">
+            <button onclick="openAddOrgModal()"
+                class="flex items-center gap-1.5 bg-upv-green text-white text-sm font-medium px-4 py-1.5 rounded-full whitespace-nowrap cursor-pointer border-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                     viewBox="0 0 24 24">
                     <line x1="12" y1="5" x2="12" y2="19" />
@@ -199,6 +203,19 @@
     </main>
 
     @stack('scripts')
+
+    <script>
+        function openAddOrgModal() {
+            const modal = document.getElementById('addOrgModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeAddOrgModal() {
+            const modal = document.getElementById('addOrgModal');
+            if (modal) modal.classList.add('hidden');
+        }
+    </script>
+
 </body>
 
 </html>
