@@ -13,6 +13,16 @@
         <form method="POST" action="{{ route('orgs.store') }}" enctype="multipart/form-data">
             @csrf
 
+            @if ($errors->any())
+                <div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-2">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="relative w-full rounded-t-2xl overflow-visible">
                 <!-- cover photo banner -->
                 <label
@@ -183,10 +193,10 @@
                 </div>
 
                 <!-- submit -->
-              <button type="submit"
-                class="w-full mt-6 bg-upv-green text-white font-head font-bold text-base py-3 rounded-xl hover:opacity-80 transition-opacity duration-150">
-                add new org
-            </button>
+                <button type="submit"
+                    class="w-full mt-6 bg-upv-green text-white font-head font-bold text-base py-3 rounded-xl hover:opacity-80 transition-opacity duration-150">
+                    add new org
+                </button>
 
             </div>
 

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use PhpParser\Node\Expr\FuncCall;
 
 class OrgController extends Controller
 {
@@ -72,8 +71,13 @@ class OrgController extends Controller
         $org = Organization::findOrFail($id);
 
         // delete images from storage
-        if ($org->logo) Storage::delete('public/' . $org->logo);
-        if ($org->cover) Storage::delete('public/' . $org->cover);
+        if ($org->logo) {
+            Storage::disk('public')->delete($org->logo);
+        }
+
+        if ($org->cover) {
+            Storage::disk('public')->delete($org->cover);
+        }
 
         $org->delete();
         return redirect()->route('orgs.archived');
@@ -93,14 +97,12 @@ class OrgController extends Controller
         $data = $request->except(['logo', 'cover']);
 
         if ($request->hasFile('logo')) {
-            // delete old logo
-            if ($org->logo) Storage::delete('public/' . $org->logo);
+            if ($org->logo) Storage::disk('public')->delete($org->logo);
             $data['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
         if ($request->hasFile('cover')) {
-            // delete old cover
-            if ($org->cover) Storage::delete('public/' . $org->cover);
+            if ($org->cover) Storage::disk('public')->delete($org->cover);
             $data['cover'] = $request->file('cover')->store('covers', 'public');
         }
 
