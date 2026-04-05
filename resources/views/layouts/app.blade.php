@@ -2,33 +2,11 @@
 <html lang="en">
 
 <head>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>UPV Orgz</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'upv-maroon': '#7b1c2e',
-                        'upv-green': '#2d6a4f',
-                        'upv-coral': '#e8836a',
-                        'upv-border': '#d9cfc3',
-                        'cream': '#fdf8f2',
-                        'cream-dark': '#f5ede0',
-                    },
-                    fontFamily: {
-                        head: ['Grandstander', 'cursive'],
-                        body: ['Grandstander', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,7 +51,7 @@
                 <!-- filter button -->
                 <div class="relative" x-data="{ open: false }">
                     <button onclick="this.nextElementSibling.classList.toggle('hidden')"
-                        class="flex items-center gap-1.5 border-2 border-upv-green text-upv-green rounded-full px-3 py-1.5 text-sm font-medium bg-transparent">
+                        class="flex items-center gap-1.5 border-2 border-upv-green text-upv-green rounded-full px-3 py-1.5 text-sm font-medium bg-transparent hover:bg-upv-green hover:text-white transition-colors duration-150">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" viewBox="0 0 24 24">
                             <line x1="4" y1="6" x2="20" y2="6" />
@@ -147,7 +125,7 @@
                         </div>
 
                         <!-- apply button -->
-                        <button class="w-full bg-upv-green text-white text-xs font-semibold py-1.5 rounded-full">
+                        <button class="w-full bg-upv-green text-white text-xs font-semibold py-1.5 rounded-full hover:opacity-90 transition-opacity">
                             Apply filters
                         </button>
                     </div>
@@ -157,11 +135,13 @@
 
             <div class="flex-1"></div>
 
-            <!-- nav button -->
-
-            <!-- orgs -->
+           <!-- orgs -->
+            @php $onOrgs = request()->routeIs('orgs.index') || request()->routeIs('orgs.show'); @endphp
             <a href="{{ route('orgs.index') }}"
-                class="flex items-center gap-1.5 bg-upv-maroon text-white text-sm font-medium px-4 py-1.5 rounded-full no-underline whitespace-nowrap">
+                class="flex items-center gap-1.5 text-sm font-medium px-4 py-1.5 rounded-full no-underline whitespace-nowrap transition-all duration-150
+                {{ $onOrgs
+                    ? 'bg-upv-maroon text-white ring-2 ring-upv-maroon ring-offset-2 shadow-md'
+                    : 'bg-upv-maroon text-white hover:opacity-80' }}">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -174,7 +154,7 @@
 
             <!-- add org -->
             <button onclick="openAddOrgModal()"
-                class="flex items-center gap-1.5 bg-upv-green text-white text-sm font-medium px-4 py-1.5 rounded-full whitespace-nowrap cursor-pointer border-0">
+                class="flex items-center gap-1.5 bg-upv-green text-white text-sm font-medium px-4 py-1.5 rounded-full whitespace-nowrap cursor-pointer border-0 hover:opacity-80 transition-all duration-150">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                     viewBox="0 0 24 24">
                     <line x1="12" y1="5" x2="12" y2="19" />
@@ -184,8 +164,12 @@
             </button>
 
             <!-- archived orgs -->
+            @php $onArchived = request()->routeIs('orgs.archived') || request()->routeIs('orgs.archived.show'); @endphp
             <a href="{{ route('orgs.archived') }}"
-                class="flex items-center gap-1.5 bg-upv-coral text-white text-sm font-medium px-4 py-1.5 rounded-full no-underline whitespace-nowrap">
+                class="flex items-center gap-1.5 text-sm font-medium px-4 py-1.5 rounded-full no-underline whitespace-nowrap transition-all duration-150
+                {{ $onArchived
+                    ? 'bg-upv-coral text-white ring-2 ring-upv-coral ring-offset-2 shadow-md'
+                    : 'bg-upv-coral text-white hover:opacity-80' }}">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" viewBox="0 0 24 24">
                     <polyline points="21 8 21 21 3 21 3 8" />
@@ -194,8 +178,6 @@
                 </svg>
                 archived orgs
             </a>
-
-        </div>
     </nav>
 
     <main>
@@ -215,7 +197,7 @@
             if (modal) modal.classList.add('hidden');
         }
     </script>
-
+    <x-toast />
 </body>
 
 </html>

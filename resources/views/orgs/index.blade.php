@@ -113,9 +113,12 @@
         <div class="flex flex-col gap-2">
 
             @forelse($orgs as $org)
-                <div
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer
-                    {{ $selected && $selected->id === $org->id ? 'bg-upv-green' : 'bg-white border border-gray-200' }}">
+            <div
+                data-org-item
+                data-org-selected="{{ $selected && $selected->id === $org->id ? 'true' : 'false' }}"
+                data-org-archived="false"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer
+                {{ $selected && $selected->id === $org->id ? 'bg-upv-green' : 'bg-white border border-gray-200' }}">
 
                     <!-- logo thumbnail -->
                     <div
@@ -132,39 +135,46 @@
                         @endif
                     </div>
 
-                    <!-- name — clicking selects the org -->
+                    <!-- name -->
                     <a href="{{ route('orgs.show', $org->id) }}"
                         class="font-head font-bold text-sm flex-1 no-underline
                         {{ $selected && $selected->id === $org->id ? 'text-white' : 'text-gray-800' }}">
                         {{ $org->name }}
                     </a>
 
-                    <!-- Edit -->
-                    <button
-                        onclick="openEditOrgModal({{ $org->id }}, '{{ addslashes($org->name) }}', '{{ addslashes($org->description) }}', '{{ $org->status }}', '{{ $org->type }}', '{{ $org->members }}', '{{ $org->email }}', '{{ $org->cover ? Storage::url($org->cover) : '' }}', '{{ $org->logo ? Storage::url($org->logo) : '' }}')"
-                        class="{{ $selected && $selected->id === $org->id ? 'text-white/70' : 'text-gray-400' }}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                            viewBox="0 0 24 24">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                        </svg>
-                    </button>
+                    <!-- <span class="text-xs text-black-400 font-medium">{{ $org->type }}</span> -->
+                    <!-- edit + archive actions -->
+                    <div class="flex items-center gap-0.7 shrink-0">
 
-                    <!-- Archive -->
-                    <form method="POST" action="{{ route('orgs.archive', $org->id) }}">
-                        @csrf
-                        @method('PUT')
-                        <button type="submit"
-                            class="{{ $selected && $selected->id === $org->id ? 'text-white/70' : 'text-gray-400' }}">
+                        <!-- edit -->
+                        <button
+                            onclick="openEditOrgModal({{ $org->id }}, '{{ addslashes($org->name) }}', '{{ addslashes($org->description) }}', '{{ $org->status }}', '{{ $org->type }}', '{{ $org->members }}', '{{ $org->email }}', '{{ $org->cover ? Storage::url($org->cover) : '' }}', '{{ $org->logo ? Storage::url($org->logo) : '' }}')"
+                            class="w-8 h-8 flex items-center justify-center rounded-lg
+                            {{ $selected && $selected->id === $org->id ? 'text-white/70 hover:bg-white/10' : 'text-gray-400 hover:bg-gray-100' }}">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <polyline points="21 8 21 21 3 21 3 8" />
-                                <rect x="1" y="3" width="22" height="5" />
-                                <line x1="10" y1="12" x2="14" y2="12" />
+                                stroke-linecap="round" viewBox="0 0 24 24">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                             </svg>
                         </button>
-                    </form>
 
+                        <!-- archive -->
+                        <form method="POST" action="{{ route('orgs.archive', $org->id) }}">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit"
+                                class="w-8 h-8 flex items-center justify-center rounded-lg
+                                {{ $selected && $selected->id === $org->id ? 'text-white/70 hover:bg-white/10' : 'text-gray-400 hover:bg-gray-100' }}">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <polyline points="21 8 21 21 3 21 3 8" />
+                                    <rect x="1" y="3" width="22" height="5" />
+                                    <line x1="10" y1="12" x2="14" y2="12" />
+                                </svg>
+                            </button>
+                        </form>
+
+                    </div>
                 </div>
             @empty
                 <div class="flex flex-col items-center justify-center py-16 text-center">
@@ -181,7 +191,20 @@
     <x-modal-edit-org />
 
     @push('scripts')
-        <script>
+            <script>
+            // ── Org Hover ──
+            document.querySelectorAll('[data-org-item]').forEach(item => {
+                if (item.dataset.orgSelected === 'true') return;
+
+                item.addEventListener('mouseenter', () => {
+                    item.style.backgroundColor = '';
+                    item.style.borderColor = '#2d6a4f';
+                });
+                item.addEventListener('mouseleave', () => {
+                    item.style.backgroundColor = '';    
+                    item.style.borderColor = '';
+                });
+            });
             // ── Add Org Modal ──
             function openAddOrgModal() {
                 document.getElementById('addOrgModal').classList.remove('hidden');

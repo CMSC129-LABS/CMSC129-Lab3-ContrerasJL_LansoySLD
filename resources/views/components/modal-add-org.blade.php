@@ -6,7 +6,7 @@
 
         <!-- close button -->
         <button onclick="closeAddOrgModal()"
-            class="absolute top-4 right-5 text-gray-500 text-xl font-bold leading-none z-10">
+            class="absolute top-4 right-5 text-gray-500 text-xl font-bold leading-none z-10 hover:opacity-80 transition-opacity duration-150">
             ✕
         </button>
 
@@ -183,10 +183,10 @@
                 </div>
 
                 <!-- submit -->
-                <button type="submit"
-                    class="w-full mt-6 bg-upv-green text-white font-head font-bold text-base py-3 rounded-xl">
-                    add new org
-                </button>
+              <button type="submit"
+                class="w-full mt-6 bg-upv-green text-white font-head font-bold text-base py-3 rounded-xl hover:opacity-80 transition-opacity duration-150">
+                add new org
+            </button>
 
             </div>
 

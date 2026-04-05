@@ -35,7 +35,15 @@ class OrgController extends Controller
     public function archived()
     {
         $orgs = Organization::where('is_archived', true)->get();
-        return view('orgs.archived', compact('orgs'));
+        $selected = $orgs->first();
+        return view('orgs.archived', compact('orgs', 'selected'));
+    }
+
+    public function archivedShow($id)
+    {
+        $orgs = Organization::where('is_archived', true)->get();
+        $selected = Organization::findOrFail($id);
+        return view('orgs.archived', compact('orgs', 'selected'));
     }
 
     public function restore($id)
@@ -55,7 +63,8 @@ class OrgController extends Controller
     public function archive($id)
     {
         Organization::findOrFail($id)->update(['is_archived' => true]);
-        return redirect()->route('orgs.index');
+        // return redirect()->route('orgs.index');
+        return redirect()->route('orgs.index')->with('success', 'org moved to archives successfully.');
     }
 
     public function destroy($id)
@@ -91,6 +100,7 @@ class OrgController extends Controller
         }
 
         Organization::create($data);
-        return redirect()->route('orgs.index');
+        // return redirect()->route('orgs.index');
+        return redirect()->route('orgs.index')->with('success', 'org added successfully.'); 
     }
 }
