@@ -79,6 +79,35 @@ class OrgController extends Controller
         return redirect()->route('orgs.archived');
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name'    => 'required|string|max:255',
+            'type'    => 'required|string',
+            'email'   => 'nullable|email',
+            'logo'    => 'nullable|image|max:2048',
+            'cover'   => 'nullable|image|max:2048',
+        ]);
+
+        $org = Organization::findOrFail($id);
+        $data = $request->except(['logo', 'cover']);
+
+        if ($request->hasFile('logo')) {
+            // delete old logo
+            if ($org->logo) Storage::delete('public/' . $org->logo);
+            $data['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        if ($request->hasFile('cover')) {
+            // delete old cover
+            if ($org->cover) Storage::delete('public/' . $org->cover);
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        $org->update($data);
+        return redirect()->route('orgs.index');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -101,6 +130,6 @@ class OrgController extends Controller
 
         Organization::create($data);
         // return redirect()->route('orgs.index');
-        return redirect()->route('orgs.index')->with('success', 'org added successfully.'); 
+        return redirect()->route('orgs.index')->with('success', 'org added successfully.');
     }
 }

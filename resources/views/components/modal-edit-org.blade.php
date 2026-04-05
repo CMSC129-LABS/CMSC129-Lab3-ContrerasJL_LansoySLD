@@ -10,7 +10,7 @@
             ✕
         </button>
 
-        <form id="editOrgForm" method="POST" action="" enctype="multipart/form-data">
+        <form id="editOrgForm" method="POST" action="{{ route('orgs.update', 0) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <input type="hidden" id="editOrgId" name="id">
@@ -24,7 +24,8 @@
                         <span class="w-9 h-9 rounded-full bg-black/50 flex items-center justify-center">
                             <svg class="w-5 h-5" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"
                                 stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                <path
+                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
                                 <circle cx="12" cy="13" r="4" />
                             </svg>
                         </span>
@@ -46,7 +47,8 @@
                             class="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full pointer-events-none">
                             <svg class="w-5 h-5" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"
                                 stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                <path
+                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
                                 <circle cx="12" cy="13" r="4" />
                             </svg>
                         </div>
@@ -95,12 +97,12 @@
                             </label>
                             <div class="flex items-center gap-5">
                                 <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="radio" name="edit_status" value="active"
+                                    <input type="radio" name="status" value="active"
                                         class="accent-upv-green w-4 h-4">
                                     <span class="text-sm text-gray-700">active</span>
                                 </label>
                                 <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="radio" name="edit_status" value="inactive"
+                                    <input type="radio" name="status" value="inactive"
                                         class="accent-upv-green w-4 h-4">
                                     <span class="text-sm text-upv-maroon font-medium">inactive</span>
                                 </label>
@@ -153,7 +155,8 @@
                                         <circle cx="9" cy="7" r="4" />
                                     </svg>
                                 </span>
-                                <input type="number" id="editOrgMembers" name="members" placeholder="Type no. here..."
+                                <input type="number" id="editOrgMembers" name="members"
+                                    placeholder="Type no. here..."
                                     class="w-full border-2 border-upv-green rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                             </div>
                         </div>
@@ -167,11 +170,13 @@
                                 <span class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                                     <svg class="w-4 h-4" fill="none" stroke="#555" stroke-width="2"
                                         stroke-linecap="round" viewBox="0 0 24 24">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                        <path
+                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                                         <polyline points="22,6 12,13 2,6" />
                                     </svg>
                                 </span>
-                                <input type="email" id="editOrgEmail" name="email" placeholder="Type email here..."
+                                <input type="email" id="editOrgEmail" name="email"
+                                    placeholder="Type email here..."
                                     class="w-full border-2 border-upv-green rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                             </div>
                         </div>
@@ -193,8 +198,8 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('editOrgModal').addEventListener('click', function (e) {
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('editOrgModal').addEventListener('click', function(e) {
             if (e.target === this) closeEditOrgModal();
         });
     });

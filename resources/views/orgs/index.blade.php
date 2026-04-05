@@ -113,11 +113,9 @@
         <div class="flex flex-col gap-2">
 
             @forelse($orgs as $org)
-            <div
-                data-org-item
-                data-org-selected="{{ $selected && $selected->id === $org->id ? 'true' : 'false' }}"
-                data-org-archived="false"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer
+                <div data-org-item data-org-selected="{{ $selected && $selected->id === $org->id ? 'true' : 'false' }}"
+                    data-org-archived="false"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer
                 {{ $selected && $selected->id === $org->id ? 'bg-upv-green' : 'bg-white border border-gray-200' }}">
 
                     <!-- logo thumbnail -->
@@ -147,10 +145,15 @@
                     <div class="flex items-center gap-0.7 shrink-0">
 
                         <!-- edit -->
-                        <button
-                            onclick="openEditOrgModal({{ $org->id }}, '{{ addslashes($org->name) }}', '{{ addslashes($org->description) }}', '{{ $org->status }}', '{{ $org->type }}', '{{ $org->members }}', '{{ $org->email }}', '{{ $org->cover ? Storage::url($org->cover) : '' }}', '{{ $org->logo ? Storage::url($org->logo) : '' }}')"
+                        <!-- edit -->
+                        <button data-id="{{ $org->id }}" data-name="{{ $org->name }}"
+                            data-description="{{ $org->description }}" data-status="{{ $org->status }}"
+                            data-type="{{ $org->type }}" data-members="{{ $org->members }}"
+                            data-email="{{ $org->email }}"
+                            data-cover="{{ $org->cover ? Storage::url($org->cover) : '' }}"
+                            data-logo="{{ $org->logo ? Storage::url($org->logo) : '' }}" onclick="openEditOrgModal(this)"
                             class="w-8 h-8 flex items-center justify-center rounded-lg
-                            {{ $selected && $selected->id === $org->id ? 'text-white/70 hover:bg-white/10' : 'text-gray-400 hover:bg-gray-100' }}">
+    {{ $selected && $selected->id === $org->id ? 'text-white/70 hover:bg-white/10' : 'text-gray-400 hover:bg-gray-100' }}">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
                                 stroke-linecap="round" viewBox="0 0 24 24">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -179,7 +182,8 @@
             @empty
                 <div class="flex flex-col items-center justify-center py-16 text-center">
                     <p class="text-sm text-gray-400 font-medium">No organizations found.</p>
-                    <button onclick="openAddOrgModal()" class="mt-3 text-upv-green text-sm font-semibold">+ add one</button>
+                    <button onclick="openAddOrgModal()" class="mt-3 text-upv-green text-sm font-semibold">+ add
+                        one</button>
                 </div>
             @endforelse
 
@@ -191,7 +195,7 @@
     <x-modal-edit-org />
 
     @push('scripts')
-            <script>
+        <script>
             // ── Org Hover ──
             document.querySelectorAll('[data-org-item]').forEach(item => {
                 if (item.dataset.orgSelected === 'true') return;
@@ -201,7 +205,7 @@
                     item.style.borderColor = '#2d6a4f';
                 });
                 item.addEventListener('mouseleave', () => {
-                    item.style.backgroundColor = '';    
+                    item.style.backgroundColor = '';
                     item.style.borderColor = '';
                 });
             });
@@ -215,7 +219,17 @@
             }
 
             // ── Edit Org Modal ──
-            function openEditOrgModal(id, name, description, status, type, members, email, cover, logo) {
+            function openEditOrgModal(btn) {
+                const id = btn.dataset.id;
+                const name = btn.dataset.name;
+                const description = btn.dataset.description;
+                const status = btn.dataset.status;
+                const type = btn.dataset.type;
+                const members = btn.dataset.members;
+                const email = btn.dataset.email;
+                const cover = btn.dataset.cover;
+                const logo = btn.dataset.logo;
+
                 document.getElementById('editOrgId').value = id;
                 document.getElementById('editOrgName').value = name;
                 document.getElementById('editOrgDesc').value = description;
@@ -223,7 +237,7 @@
                 document.getElementById('editOrgEmail').value = email;
 
                 // status radio
-                document.querySelectorAll('input[name="edit_status"]').forEach(r => {
+                document.querySelectorAll('input[name="status"]').forEach(r => {
                     r.checked = r.value === status;
                 });
 
@@ -250,8 +264,13 @@
                     logoPreview.classList.add('hidden');
                 }
 
+                // set form action
+                document.getElementById('editOrgForm').action = `/orgs/${id}`;
+
                 document.getElementById('editOrgModal').classList.remove('hidden');
             }
+
+
 
             function closeEditOrgModal() {
                 document.getElementById('editOrgModal').classList.add('hidden');
@@ -275,6 +294,10 @@
             document.getElementById('addOrgModal').addEventListener('click', function(e) {
                 if (e.target === this) closeAddOrgModal();
             });
+
+            document.getElementById('editOrgModal').addEventListener('click', function(e) {
+                if (e.target === this) closeEditOrgModal();
+            })
 
             // ── Auto open add modal if validation errors ──
             @if ($errors->any())

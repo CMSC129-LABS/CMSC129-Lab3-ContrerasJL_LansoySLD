@@ -12,3 +12,4 @@ Route::put('/orgs/{id}/archive', [OrgController::class, 'archive'])->name('orgs.
 Route::get('/orgs/{id}/edit', [OrgController::class, 'edit'])->name('orgs.edit');
 Route::delete('/orgs/{id}', [OrgController::class, 'destroy'])->name('orgs.destroy');
 Route::get('/orgs/archived/{id}', [OrgController::class, 'archivedShow'])->name('orgs.archived.show');
+Route::put('/orgs/{id}', [OrgController::class, 'update'])->name('orgs.update');
