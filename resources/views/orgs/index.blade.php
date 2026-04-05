@@ -115,12 +115,12 @@
             @forelse($orgs as $org)
                 <div
                     class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer
-            {{ $selected && $selected->id === $org->id ? 'bg-upv-green' : 'bg-white border border-gray-200' }}">
+                    {{ $selected && $selected->id === $org->id ? 'bg-upv-green' : 'bg-white border border-gray-200' }}">
 
                     <!-- logo thumbnail -->
                     <div
                         class="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0
-                {{ $selected && $selected->id === $org->id ? 'bg-white/20 border-2 border-white/40' : 'bg-gray-100 border-2 border-gray-300' }}">
+                        {{ $selected && $selected->id === $org->id ? 'bg-white/20 border-2 border-white/40' : 'bg-gray-100 border-2 border-gray-300' }}">
                         @if ($org->logo)
                             <img src="{{ Storage::url($org->logo) }}" class="w-full h-full object-cover">
                         @else
@@ -135,19 +135,20 @@
                     <!-- name — clicking selects the org -->
                     <a href="{{ route('orgs.show', $org->id) }}"
                         class="font-head font-bold text-sm flex-1 no-underline
-               {{ $selected && $selected->id === $org->id ? 'text-white' : 'text-gray-800' }}">
+                        {{ $selected && $selected->id === $org->id ? 'text-white' : 'text-gray-800' }}">
                         {{ $org->name }}
                     </a>
 
                     <!-- Edit -->
-                    <a href="{{ route('orgs.edit', $org->id) }}"
+                    <button
+                        onclick="openEditOrgModal({{ $org->id }}, '{{ addslashes($org->name) }}', '{{ addslashes($org->description) }}', '{{ $org->status }}', '{{ $org->type }}', '{{ $org->members }}', '{{ $org->email }}')"
                         class="{{ $selected && $selected->id === $org->id ? 'text-white/70' : 'text-gray-400' }}">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
                             viewBox="0 0 24 24">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                         </svg>
-                    </a>
+                    </button>
 
                     <!-- Archive -->
                     <form method="POST" action="{{ route('orgs.archive', $org->id) }}">
@@ -168,10 +169,76 @@
             @empty
                 <div class="flex flex-col items-center justify-center py-16 text-center">
                     <p class="text-sm text-gray-400 font-medium">No organizations found.</p>
-                    <a href="{{ route('orgs.create') }}" class="mt-3 text-upv-green text-sm font-semibold">+ add one</a>
+                    <button onclick="openAddOrgModal()" class="mt-3 text-upv-green text-sm font-semibold">+ add one</button>
                 </div>
             @endforelse
 
         </div>
     </div>
+
+    {{-- Modals --}}
+    <x-modal-add-org />
+
+    @push('scripts')
+        <script>
+            // ── Add Org Modal ──
+            function openAddOrgModal() {
+                document.getElementById('addOrgModal').classList.remove('hidden');
+            }
+
+            function closeAddOrgModal() {
+                document.getElementById('addOrgModal').classList.add('hidden');
+            }
+
+            // ── Edit Org Modal ──
+            function openEditOrgModal(id, name, description, status, type, members, email) {
+                document.getElementById('editOrgId').value = id;
+                document.getElementById('editOrgName').value = name;
+                document.getElementById('editOrgDesc').value = description;
+                document.getElementById('editOrgMembers').value = members;
+                document.getElementById('editOrgEmail').value = email;
+
+                // set status radio
+                document.querySelectorAll('input[name="edit_status"]').forEach(r => {
+                    r.checked = r.value === status;
+                });
+
+                // set type select
+                document.getElementById('editOrgType').value = type;
+
+                // set form action
+                document.getElementById('editOrgForm').action = `/orgs/${id}`;
+
+                document.getElementById('editOrgModal').classList.remove('hidden');
+            }
+
+            function closeEditOrgModal() {
+                document.getElementById('editOrgModal').classList.add('hidden');
+            }
+
+            // ── Image Preview ──
+            function previewImage(input, previewId) {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.getElementById(previewId);
+                        preview.src = e.target.result;
+                        preview.classList.remove('hidden');
+                    }
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            // ── Close modals when clicking outside ──
+            document.getElementById('addOrgModal').addEventListener('click', function(e) {
+                if (e.target === this) closeAddOrgModal();
+            });
+
+            // ── Auto open add modal if validation errors ──
+            @if ($errors->any())
+                openAddOrgModal();
+            @endif
+        </script>
+    @endpush
 @endsection
