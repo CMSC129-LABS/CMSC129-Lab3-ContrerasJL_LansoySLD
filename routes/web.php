@@ -1,19 +1,9 @@
 <?php
 
+use App\Http\Controllers\OrgController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect()->route('orgs.index');
-});
-
-Route::get('/orgs', function () {
-    return view('orgs.index');
-})->name('orgs.index');
-
-Route::get('/orgs/create', function () {
-    return view('orgs.index');
-})->name('orgs.create');
-
-Route::get('/orgs/archived', function () {
-    return view('orgs.index');
-})->name('orgs.archived');
+Route::get('/', [OrgController::class, 'index'])->name('orgs.index');
+Route::get('/orgs/create', [OrgController::class, 'create'])->name('orgs.create');
+Route::post('/orgs', [OrgController::class, 'store'])->name('orgs.store');
+Route::get('/orgs/archived', [OrgController::class, 'archived'])->name('orgs.archived');
