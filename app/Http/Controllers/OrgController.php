@@ -89,8 +89,8 @@ class OrgController extends Controller
             'name'    => 'required|string|max:255',
             'type'    => 'required|string',
             'email'   => 'nullable|email',
-            'logo'    => 'nullable|image|max:2048',
-            'cover'   => 'nullable|image|max:2048',
+            'logo'    => 'nullable|image|max:5120',
+            'cover'   => 'nullable|image|max:5120',
         ]);
 
         $org = Organization::findOrFail($id);

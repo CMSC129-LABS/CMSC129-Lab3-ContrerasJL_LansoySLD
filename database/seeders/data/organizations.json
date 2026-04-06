@@ -1,0 +1,112 @@
+[
+    {
+        "name": "UPV Komsai.Org",
+        "description": "UPV Komsai.Org is a university-wide organization for anyone who has taken up at least 3.0 units of CMSC or any equivalent course, BS Computer Science students, faculty, and alumni of the University of the Philippines Visayas.",
+        "type": "academic",
+        "status": "active",
+        "email": "upvkomsai@gmail.com",
+        "members": 130,
+        "is_archived": false,
+        "logo": "komsai-logo.jpg",
+        "cover": "komsai-cover.png"
+    },
+    {
+        "name": "UPV Elektrons",
+        "description": "An academic organization with members enrolled in the following degree programs: BS in Applied Mathematics, BS in Chemistry, BS in Computer Science, and BS in Statistics.",
+        "type": "academic",
+        "status": "active",
+        "email": "upvelektrons@gmail.com",
+        "members": 450,
+        "is_archived": false,
+        "logo": "elektrons-logo.png",
+        "cover": "elektrons-cover.png"
+    },
+    {
+        "name": "UPV Badminton Club",
+        "description": "UPV Badminton Club is a university-wide organization that aims to promote the sport of badminton and provide opportunities for members to participate, improve their skills, and engage in friendly competition.",
+        "type": "sports",
+        "status": "inactive",
+        "email": "upvbdc@gmail.com",
+        "members": 50,
+        "is_archived": false,
+        "logo": "badminton-logo.jpg",
+        "cover": "badminton-cover.png"
+    },
+    {
+        "name": "Sandigan ng Mag-aaral para sa Sambayanan - UPV",
+        "description": "SAMASA-UPV - Serving the Students and the People with Commitment and Consistency for 44 Years.",
+        "type": "political",
+        "status": "active",
+        "email": "samasa.upvisayas1@gmail.com",
+        "members": 80,
+        "is_archived": false,
+        "logo": "samasa-logo.jpg",
+        "cover": "samasa-cover.jpg"
+    },
+    {
+        "name": "UPV Diwata Esports",
+        "description": "The premier esports organization of the University of the Philippines Visayas. #SeizeTheGame ❤️💜.",
+        "type": "sports",
+        "status": "inactive",
+        "email": "diwataesports@gmail.com",
+        "members": 30,
+        "is_archived": false,
+        "logo": "diwataesports-logo.jpg",
+        "cover": "diwataesports-cover.png"
+    },
+    {
+        "name": "Project PAWradise",
+        "description": "We are not just an animal appreciation group. We strive for better conditions for UPV campus strays.",
+        "type": "special_interest",
+        "status": "active",
+        "email": "projectpawradise.upv@gmail.com",
+        "members": 30,
+        "is_archived": true,
+        "logo": "pawradise-logo.jpg",
+        "cover": "pawradise-cover.jpg"
+    },
+    {
+        "name": "UP Antiqueño",
+        "description": "UP Antiqueño is a duly recognized university-wide organization in UP Visayas that aims to uphold honor and excellence, cultivating young minds in promoting the culture, dedicated to inculcate academic and social responsibilities among the students.",
+        "type": "culture_identity",
+        "status": "active",
+        "email": "isko.antikenyo@gmail.com",
+        "members": 45,
+        "is_archived": false,
+        "logo": "antikenyo-logo.jpg",
+        "cover": "antikenyo-cover.png"
+    },
+    {
+        "name": "UPV Hublag Dance Company",
+        "description": "The UPV Hublag Dance Company (UPVHDC) is one of the few performing groups in UP Visayas, guided with the motto, “passion, movement, and dance.” It is a university-wide campus organization composed of enrolled UPV students united in passion for dancing and providing quality entertainment and artistic performances to successfully and efficiently promote cultural diversity.",
+        "type": "performer",
+        "status": "active",
+        "email": "hublag.upv@gmail.com",
+        "members": 50,
+        "is_archived": false,
+        "logo": "hublag-logo.jpg",
+        "cover": "hublag-cover.jpg"
+    },
+    {
+        "name": "Pagbutlak",
+        "description": "The Official Student Publication of College of Arts and Sciences, University of the Philippines Visayas, since 1974.",
+        "type": "media",
+        "status": "active",
+        "email": "pagbutlak.upv@up.edu.ph",
+        "members": 30,
+        "is_archived": false,
+        "logo": "pagbutlak-logo.jpg",
+        "cover": "pagbutlak-cover.jpg"
+    },
+    {
+        "name": "UPV Twinks and Tombits Community Battalion",
+        "description": "Inspired from #BFW24911 where it aims to provide a safe space for LGBTQIA+ students in UP Visayas, fostering inclusivity, support, and advocacy for the rights and well-being of the LGBTQIA+ community.",
+        "type": "others",
+        "status": "inactive",
+        "email": "inexistent@gmail.com",
+        "members": 6767,
+        "is_archived": true,
+        "logo": "twinks-tombits-logo.png",
+        "cover": "twinks-tombits-cover.jpg"
+    }
+]

@@ -12,7 +12,7 @@
                     <!-- cover -->
                     <div class="rounded-2xl aspect-[16/7] overflow-hidden bg-[#1a1a1a] flex items-center justify-center">
                         @if ($selected && $selected->cover)
-                            <img src="{{ Storage::url($selected->cover) }}" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $selected->cover) }}" class="w-full h-full object-cover">
                         @else
                             <svg class="w-12 h-12 fill-white opacity-20" viewBox="0 0 24 24">
                                 <path
@@ -24,7 +24,7 @@
                     <div
                         class="absolute -bottom-6 left-4 w-28 h-28 rounded-full bg-white border-4 border-white shadow-md flex items-center justify-center overflow-hidden">
                         @if ($selected && $selected->logo)
-                            <img src="{{ Storage::url($selected->logo) }}" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $selected->logo) }}" class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full bg-gray-100 flex items-center justify-center">
                                 <svg class="w-8 h-8 fill-gray-400" viewBox="0 0 24 24">
@@ -123,7 +123,7 @@
                         class="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0
                         {{ $selected && $selected->id === $org->id ? 'bg-white/20 border-2 border-white/40' : 'bg-gray-100 border-2 border-gray-300' }}">
                         @if ($org->logo)
-                            <img src="{{ Storage::url($org->logo) }}" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $org->logo) }}" class="w-full h-full object-cover">
                         @else
                             <svg class="w-4 h-4 {{ $selected && $selected->id === $org->id ? 'fill-white opacity-60' : 'fill-gray-400' }}"
                                 viewBox="0 0 24 24">
@@ -150,8 +150,9 @@
                             data-description="{{ $org->description }}" data-status="{{ $org->status }}"
                             data-type="{{ $org->type }}" data-members="{{ $org->members }}"
                             data-email="{{ $org->email }}"
-                            data-cover="{{ $org->cover ? Storage::url($org->cover) : '' }}"
-                            data-logo="{{ $org->logo ? Storage::url($org->logo) : '' }}" onclick="openEditOrgModal(this)"
+                            data-cover="{{ $org->cover ? asset('storage/' . $org->cover) : '' }}"
+                            data-logo="{{ $org->logo ? asset('storage/' . $org->logo) : '' }}"
+                            onclick="openEditOrgModal(this)"
                             class="w-8 h-8 flex items-center justify-center rounded-lg
     {{ $selected && $selected->id === $org->id ? 'text-white/70 hover:bg-white/10' : 'text-gray-400 hover:bg-gray-100' }}">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
