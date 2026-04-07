@@ -48,7 +48,10 @@ class OrgController extends Controller
     public function restore($id)
     {
         $org = Organization::findOrFail($id);
-        $org->update(['is_archived' => false]);
+        $org->update([
+            'is_archived' => false,
+            'archived_at' => null,
+        ]);
         return redirect()->route('orgs.archived');
     }
 
@@ -72,8 +75,10 @@ class OrgController extends Controller
 
     public function archive($id)
     {
-        Organization::findOrFail($id)->update(['is_archived' => true]);
-        // return redirect()->route('orgs.index');
+        Organization::findOrFail($id)->update([
+            'is_archived' => true,
+            'archived_at' => now(),
+        ]);
         return redirect()->route('orgs.index')->with('success', 'org moved to archives successfully.');
     }
 

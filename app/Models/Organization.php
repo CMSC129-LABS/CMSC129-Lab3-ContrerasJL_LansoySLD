@@ -16,6 +16,12 @@ class Organization extends Model
         'logo',
         'cover',
         'is_archived',
+        'archived_at',
+    ];
+
+    protected $casts = [
+        'archived_at' => 'datetime',
+        'is_archived' => 'boolean',
     ];
 
     public function scopeActive($query)

@@ -59,6 +59,7 @@ class OrganizationSeeder extends Seeder
                 'is_archived' => $org['is_archived'],
                 'logo'        => $logoPath,
                 'cover'       => $coverPath,
+                'archived_at' => $org['is_archived'] ? now() : null,
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ]);

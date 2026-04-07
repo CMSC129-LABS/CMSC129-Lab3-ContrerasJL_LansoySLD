@@ -61,7 +61,7 @@
         "status": "active",
         "email": "projectpawradise.upv@gmail.com",
         "members": 30,
-        "is_archived": true,
+        "is_archived": false,
         "logo": "pawradise-logo.jpg",
         "cover": "pawradise-cover.jpg"
     },

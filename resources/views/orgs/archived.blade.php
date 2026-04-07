@@ -14,18 +14,21 @@
                             <img src="{{ Storage::url($selected->cover) }}" class="w-full h-full object-cover">
                         @else
                             <svg class="w-12 h-12 fill-white opacity-20" viewBox="0 0 24 24">
-                                <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z" />
+                                <path
+                                    d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z" />
                             </svg>
                         @endif
                     </div>
                     <!-- logo -->
-                    <div class="absolute -bottom-6 left-4 w-28 h-28 rounded-full bg-white border-4 border-white shadow-md flex items-center justify-center overflow-hidden">
+                    <div
+                        class="absolute -bottom-6 left-4 w-28 h-28 rounded-full bg-white border-4 border-white shadow-md flex items-center justify-center overflow-hidden">
                         @if ($selected && $selected->logo)
                             <img src="{{ Storage::url($selected->logo) }}" class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full bg-gray-100 flex items-center justify-center">
                                 <svg class="w-8 h-8 fill-gray-400" viewBox="0 0 24 24">
-                                    <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z" />
+                                    <path
+                                        d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z" />
                                 </svg>
                             </div>
                         @endif
@@ -74,18 +77,18 @@
         <div class="flex flex-col gap-2">
 
             @forelse($orgs as $org)
-                <div
-                    data-org-item
-                    data-org-selected="{{ ($selected && $selected->id === $org->id) ? 'true' : 'false' }}"
+                <div data-org-item data-org-selected="{{ $selected && $selected->id === $org->id ? 'true' : 'false' }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer
-                    {{ ($selected && $selected->id === $org->id) ? 'bg-upv-coral/10 border-2 border-upv-coral' : 'bg-white border border-gray-200' }}">
+                    {{ $selected && $selected->id === $org->id ? 'bg-upv-coral/10 border-2 border-upv-coral' : 'bg-white border border-gray-200' }}">
 
-                    <div class="w-9 h-9 rounded-full bg-gray-100 border-2 border-gray-300 flex items-center justify-center shrink-0 overflow-hidden">
+                    <div
+                        class="w-9 h-9 rounded-full bg-gray-100 border-2 border-gray-300 flex items-center justify-center shrink-0 overflow-hidden">
                         @if ($org->logo)
                             <img src="{{ Storage::url($org->logo) }}" class="w-full h-full object-cover">
                         @else
                             <svg class="w-4 h-4 fill-gray-400" viewBox="0 0 24 24">
-                                <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z" />
+                                <path
+                                    d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z" />
                             </svg>
                         @endif
                     </div>
@@ -95,6 +98,15 @@
                         {{ $org->name }}
                     </a>
 
+                    <!-- days remaining -->
+                    @php
+                        $daysLeft = $org->archived_at ? max(0, 30 - (int) $org->archived_at->diffInDays(now())) : null;
+                    @endphp
+                    <span
+                        class="text-xs {{ $daysLeft !== null && $daysLeft <= 7 ? 'text-red-400' : 'text-gray-400' }} font-medium whitespace-nowrap">
+                        {{ $daysLeft !== null ? "deletes in {$daysLeft} days" : '' }}
+                    </span>
+
                     <!-- <span class="text-xs text-gray-400 font-medium">{{ $org->type }}</span> -->
 
                     <!-- Restore -->
@@ -103,7 +115,8 @@
                         @method('PUT')
                         <button type="submit"
                             class="flex items-center gap-1 text-upv-green text-xs font-semibold px-3 py-1 border-2 border-upv-green rounded-full">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5"
+                                stroke-linecap="round" viewBox="0 0 24 24">
                                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
                                 <path d="M3 3v5h5" />
                             </svg>
@@ -117,7 +130,8 @@
                         @method('DELETE')
                         <button type="submit"
                             class="flex items-center gap-1 text-upv-coral text-xs font-semibold px-3 py-1 border-2 border-upv-coral rounded-full">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5"
+                                stroke-linecap="round" viewBox="0 0 24 24">
                                 <polyline points="3 6 5 6 21 6" />
                                 <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
                                 <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
