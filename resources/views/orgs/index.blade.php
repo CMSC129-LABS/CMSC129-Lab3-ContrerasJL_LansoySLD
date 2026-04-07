@@ -134,9 +134,9 @@
                     </div>
 
                     <!-- name -->
-                    <a href="{{ route('orgs.show', $org->id) }}"
+                    <a href="{{ route('orgs.show', $org->id) . (request('q') ? '?q=' . urlencode(request('q')) : '') }}"
                         class="font-head font-bold text-sm flex-1 no-underline
-                        {{ $selected && $selected->id === $org->id ? 'text-white' : 'text-gray-800' }}">
+    {{ $selected && $selected->id === $org->id ? 'text-white' : 'text-gray-800' }}">
                         {{ $org->name }}
                     </a>
 

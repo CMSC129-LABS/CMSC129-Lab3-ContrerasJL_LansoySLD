@@ -66,10 +66,25 @@ class OrgController extends Controller
         return response()->json($orgs);
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $orgs = Organization::where('is_archived', false)->get();
-        $selected = Organization::findOrFail($id);
+        $query = Organization::where('is_archived', false);
+
+        if ($request->filled('q')) {
+            $query->where('name', 'ilike', '%' . $request->input('q') . '%');
+        }
+
+        if ($request->filter_status && $request->filter_status !== 'all') {
+            $query->where('status', $request->filter_status);
+        }
+
+        if ($request->filled('filter_type')) {
+            $query->whereIn('type', $request->filter_type);
+        }
+
+        $orgs = $query->get();
+        $selected = $orgs->firstWhere('id', $id) ?? $orgs->first();
+
         return view('orgs.index', compact('orgs', 'selected'));
     }
 
