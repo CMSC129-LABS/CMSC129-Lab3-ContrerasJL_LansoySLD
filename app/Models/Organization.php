@@ -33,4 +33,12 @@ class Organization extends Model
     {
         return $query->where('is_archived', true);
     }
+        public function getDaysLeftAttribute()
+    {
+        return $this->archived_at 
+            ? max(0, 30 - (int) $this->archived_at->diffInDays(now())) 
+            : null;
+    }
+    
+
 }

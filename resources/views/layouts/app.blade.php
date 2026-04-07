@@ -26,7 +26,7 @@
             <!-- brand -->
             <a href="{{ route('orgs.index') }}"
                 class="font-head font-extrabold text-3xl text-upv-maroon tracking-tight shrink-0 no-underline">
-                Orgy Finder
+                UPV Org Hub
             </a>
 
             <!-- search and filter group -->
@@ -203,7 +203,7 @@
             </a>
 
             <!-- add org -->
-            <button onclick="openAddOrgModal()"
+            <button onclick="handleAddOrg()"
                 class="flex items-center gap-1.5 bg-upv-green text-white text-sm font-medium px-4 py-1.5 rounded-full whitespace-nowrap cursor-pointer border-0 hover:opacity-80 transition-all duration-150">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                     viewBox="0 0 24 24">
@@ -237,11 +237,14 @@
     @stack('scripts')
 
     <script>
-        function openAddOrgModal() {
-            const modal = document.getElementById('addOrgModal');
-            if (modal) modal.classList.remove('hidden');
+        function handleAddOrg() {
+            const onArchived = {{ request()->routeIs('orgs.archived*') ? 'true' : 'false' }};
+            if (onArchived) {
+                window.location.href = "{{ route('orgs.index') }}?add=1";
+            } else {
+                openAddOrgModal();
+            }
         }
-
         function closeAddOrgModal() {
             const modal = document.getElementById('addOrgModal');
             if (modal) modal.classList.add('hidden');

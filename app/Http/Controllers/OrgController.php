@@ -31,6 +31,7 @@ class OrgController extends Controller
         return view('orgs.index', compact('orgs', 'selected'));
     }
 
+    // archived orgs list
     public function archived()
     {
         $orgs = Organization::where('is_archived', true)->get();
@@ -38,6 +39,7 @@ class OrgController extends Controller
         return view('orgs.archived', compact('orgs', 'selected'));
     }
 
+    // show archived org details
     public function archivedShow($id)
     {
         $orgs = Organization::where('is_archived', true)->get();
@@ -45,6 +47,7 @@ class OrgController extends Controller
         return view('orgs.archived', compact('orgs', 'selected'));
     }
 
+    // restore org
     public function restore($id)
     {
         $org = Organization::findOrFail($id);
@@ -52,9 +55,10 @@ class OrgController extends Controller
             'is_archived' => false,
             'archived_at' => null,
         ]);
-        return redirect()->route('orgs.archived');
+        return redirect()->route('orgs.archived')->with('success', 'org restored sucessfully.');
     }
 
+    // search orgs for select input
     public function search(Request $request)
     {
         $q = $request->input('q', '');
@@ -65,7 +69,8 @@ class OrgController extends Controller
 
         return response()->json($orgs);
     }
-
+    
+    // show org details
     public function show(Request $request, $id)
     {
         $query = Organization::where('is_archived', false);
@@ -88,15 +93,17 @@ class OrgController extends Controller
         return view('orgs.index', compact('orgs', 'selected'));
     }
 
+    // archive org
     public function archive($id)
     {
         Organization::findOrFail($id)->update([
             'is_archived' => true,
             'archived_at' => now(),
         ]);
-        return redirect()->route('orgs.index')->with('success', 'org moved to archives successfully.');
+        return redirect()->route('orgs.index')->with('success', 'org moved to archives.');
     }
 
+    // delete org permanently
     public function destroy($id)
     {
         $org = Organization::findOrFail($id);
@@ -111,9 +118,10 @@ class OrgController extends Controller
         }
 
         $org->delete();
-        return redirect()->route('orgs.archived');
+        return redirect()->route('orgs.archived')->with('success', 'org deleted permanently.');
     }
 
+    // update org
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -138,9 +146,10 @@ class OrgController extends Controller
         }
 
         $org->update($data);
-        return redirect()->route('orgs.index');
+        return redirect()->route('orgs.show', $org->id)->with('success', 'org updated successfully.');
     }
 
+    // add new org
     public function store(Request $request)
     {
         $request->validate([
@@ -161,8 +170,9 @@ class OrgController extends Controller
             $data['cover'] = $request->file('cover')->store('covers', 'public');
         }
 
-        Organization::create($data);
+        $org = Organization::create($data);
+        
         // return redirect()->route('orgs.index');
-        return redirect()->route('orgs.index')->with('success', 'org added successfully.');
+        return redirect()->route('orgs.show', $org)->with('success', 'org created successfully.');
     }
 }

@@ -136,15 +136,13 @@
                     <!-- name -->
                     <a href="{{ route('orgs.show', $org->id) . (request('q') ? '?q=' . urlencode(request('q')) : '') }}"
                         class="font-head font-bold text-sm flex-1 no-underline
-    {{ $selected && $selected->id === $org->id ? 'text-white' : 'text-gray-800' }}">
+                        {{ $selected && $selected->id === $org->id ? 'text-white' : 'text-gray-800' }}">
                         {{ $org->name }}
                     </a>
 
-                    <!-- <span class="text-xs text-black-400 font-medium">{{ $org->type }}</span> -->
                     <!-- edit + archive actions -->
-                    <div class="flex items-center gap-0.7 shrink-0">
+                    <div class="flex items-center gap-2 shrink-0">
 
-                        <!-- edit -->
                         <!-- edit -->
                         <button data-id="{{ $org->id }}" data-name="{{ $org->name }}"
                             data-description="{{ $org->description }}" data-status="{{ $org->status }}"
@@ -153,13 +151,14 @@
                             data-cover="{{ $org->cover ? asset('storage/' . $org->cover) : '' }}"
                             data-logo="{{ $org->logo ? asset('storage/' . $org->logo) : '' }}"
                             onclick="openEditOrgModal(this)"
-                            class="w-8 h-8 flex items-center justify-center rounded-lg
-    {{ $selected && $selected->id === $org->id ? 'text-white/70 hover:bg-white/10' : 'text-gray-400 hover:bg-gray-100' }}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                            class="flex items-center gap-1 text-xs font-semibold px-3 py-1 border-2 rounded-full transition-colors
+                            {{ $selected && $selected->id === $org->id ? 'text-white border-white/60 hover:bg-white/10' : 'text-upv-green border-upv-green hover:bg-green-100' }}">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5"
                                 stroke-linecap="round" viewBox="0 0 24 24">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                             </svg>
+                            edit
                         </button>
 
                         <!-- archive -->
@@ -167,14 +166,15 @@
                             @csrf
                             @method('PUT')
                             <button type="submit"
-                                class="w-8 h-8 flex items-center justify-center rounded-lg
-                                {{ $selected && $selected->id === $org->id ? 'text-white/70 hover:bg-white/10' : 'text-gray-400 hover:bg-gray-100' }}">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                                class="flex items-center gap-1 text-xs font-semibold px-3 py-1 border-2 rounded-full transition-colors
+                                {{ $selected && $selected->id === $org->id ? 'text-white border-white/60 hover:bg-white/10' : 'text-red-400 border-red-400 hover:bg-red-100' }}">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5"
                                     stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                     <polyline points="21 8 21 21 3 21 3 8" />
                                     <rect x="1" y="3" width="22" height="5" />
                                     <line x1="10" y1="12" x2="14" y2="12" />
                                 </svg>
+                                archive
                             </button>
                         </form>
 
@@ -197,7 +197,7 @@
 
     @push('scripts')
         <script>
-            // ── Org Hover ──
+            // org hover
             document.querySelectorAll('[data-org-item]').forEach(item => {
                 if (item.dataset.orgSelected === 'true') return;
 
@@ -210,7 +210,7 @@
                     item.style.borderColor = '';
                 });
             });
-            // ── Add Org Modal ──
+            // add
             function openAddOrgModal() {
                 document.getElementById('addOrgModal').classList.remove('hidden');
             }
@@ -219,7 +219,7 @@
                 document.getElementById('addOrgModal').classList.add('hidden');
             }
 
-            // ── Edit Org Modal ──
+            // edit
             function openEditOrgModal(btn) {
                 const id = btn.dataset.id;
                 const name = btn.dataset.name;
@@ -234,6 +234,10 @@
                 document.getElementById('editOrgId').value = id;
                 document.getElementById('editOrgName').value = name;
                 document.getElementById('editOrgDesc').value = description;
+                const charCount = document.getElementById('editCharCount');
+                    if (charCount) {
+                        charCount.textContent = description.length + " / 600 characters";
+                    }
                 document.getElementById('editOrgMembers').value = members;
                 document.getElementById('editOrgEmail').value = email;
 
@@ -277,7 +281,7 @@
                 document.getElementById('editOrgModal').classList.add('hidden');
             }
 
-            // ── Image Preview ──
+            //  image preview
             function previewImage(input, previewId) {
                 const file = input.files[0];
                 if (file) {
@@ -291,7 +295,7 @@
                 }
             }
 
-            // ── Close modals when clicking outside ──
+            // close modals when clicking outside
             document.getElementById('addOrgModal').addEventListener('click', function(e) {
                 if (e.target === this) closeAddOrgModal();
             });
@@ -300,10 +304,17 @@
                 if (e.target === this) closeEditOrgModal();
             })
 
-            // ── Auto open add modal if validation errors ──
+            // auto open add org modal if there are validation errors
             @if ($errors->any())
                 openAddOrgModal();
             @endif
+
+            // auto-open modal if redirected from archived page
+            @if(request('add') == '1')
+                document.addEventListener('DOMContentLoaded', () => openAddOrgModal());
+            @endif
+
         </script>
+        
     @endpush
 @endsection

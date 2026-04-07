@@ -6,7 +6,7 @@
 
         <!-- close button -->
         <button onclick="closeEditOrgModal()"
-            class="absolute top-4 right-5 text-gray-500 text-xl font-bold leading-none z-10">
+            class="absolute top-4 right-5 z-[50] text-red-400 text-xl font-bold leading-none hover:opacity-80 transition-opacity duration-150">
             ✕
         </button>
 
@@ -73,19 +73,27 @@
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
                                 Name of the org?
                             </label>
-                            <input type="text" id="editOrgName" name="name" placeholder="Type name here..."
+                            <input type="text" id="editOrgName" name="name" placeholder="Type name here..."  maxlength="150"
                                 class="w-full border-2 border-upv-green rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                         </div>
 
                         <!-- description -->
                         <div class="flex flex-col flex-1">
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
-                                Describe the org
+                                Describe the org (600 characters max)
                             </label>
-                            <textarea id="editOrgDesc" name="description" placeholder="Type description here..." rows="5"
+                            <textarea 
+                                name="description" 
+                                placeholder="Type description here..." 
+                                rows="5"
+                                maxlength="600"
+                                id="editOrgDesc"
                                 class="w-full h-full border-2 border-upv-green rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none resize-none font-body"></textarea>
-                        </div>
 
+                            <span id="editCharCount" class="text-xs text-gray-500 mt-1 text-right">
+                                0 / 600 characters
+                            </span>
+                        </div>
                     </div>
 
                     <div class="flex flex-col gap-4">
@@ -196,11 +204,29 @@
         </form>
     </div>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('editOrgModal').addEventListener('click', function(e) {
-            if (e.target === this) closeEditOrgModal();
-        });
+
+        const textarea = document.getElementById('editOrgDesc');
+        const charCount = document.getElementById('editCharCount');
+        const editModal = document.getElementById('editOrgModal');
+
+        function updateCharCount() {
+            if (textarea && charCount) {
+                charCount.textContent = textarea.value.length + " / 600 characters";
+            }
+        }
+
+        if (textarea) {
+            textarea.addEventListener('input', updateCharCount);
+            updateCharCount();
+        }
+
+        if (editModal) {
+            editModal.addEventListener('click', function(e) {
+                if (e.target === this) closeEditOrgModal();
+            });
+        }
+
     });
 </script>

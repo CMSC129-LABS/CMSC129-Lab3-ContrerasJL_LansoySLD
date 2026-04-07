@@ -99,22 +99,16 @@
                     </a>
 
                     <!-- days remaining -->
-                    @php
-                        $daysLeft = $org->archived_at ? max(0, 30 - (int) $org->archived_at->diffInDays(now())) : null;
-                    @endphp
-                    <span
-                        class="text-xs {{ $daysLeft !== null && $daysLeft <= 7 ? 'text-red-400' : 'text-gray-400' }} font-medium whitespace-nowrap">
-                        {{ $daysLeft !== null ? "deletes in {$daysLeft} days" : '' }}
+                    <span class="text-xs {{ $org->days_left !== null && $org->days_left <= 7 ? 'text-red-400' : 'text-gray-400' }} font-medium whitespace-nowrap">
+                        {{ $org->days_left !== null ? "deletes in {$org->days_left} days" : '' }}
                     </span>
-
-                    <!-- <span class="text-xs text-gray-400 font-medium">{{ $org->type }}</span> -->
 
                     <!-- Restore -->
                     <form method="POST" action="{{ route('orgs.restore', $org->id) }}">
                         @csrf
                         @method('PUT')
                         <button type="submit"
-                            class="flex items-center gap-1 text-upv-green text-xs font-semibold px-3 py-1 border-2 border-upv-green rounded-full">
+                            class="flex items-center gap-1 text-upv-green text-xs font-semibold px-3 py-1 border-2 border-upv-green rounded-full hover:bg-green-100">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5"
                                 stroke-linecap="round" viewBox="0 0 24 24">
                                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
@@ -124,21 +118,17 @@
                         </button>
                     </form>
 
-                    <!-- Delete -->
-                    <form method="POST" action="{{ route('orgs.destroy', $org->id) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="flex items-center gap-1 text-upv-coral text-xs font-semibold px-3 py-1 border-2 border-upv-coral rounded-full">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5"
-                                stroke-linecap="round" viewBox="0 0 24 24">
-                                <polyline points="3 6 5 6 21 6" />
-                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-                            </svg>
-                            delete
-                        </button>
-                    </form>
+                    <!-- delete -->
+                    <button onclick="openDeleteModal('{{ route('orgs.destroy', $org->id) }}')"
+                        class="flex items-center gap-1 text-upv-coral text-xs font-semibold px-3 py-1 border-2 border-upv-coral rounded-full hover:bg-red-100">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" viewBox="0 0 24 24">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                        </svg>
+                        delete
+                    </button>
 
                 </div>
             @empty
@@ -147,6 +137,40 @@
                 </div>
             @endforelse
 
+        </div>
+    </div>
+
+    <!-- delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4 border-2 border-gray-100">
+            <div class="flex flex-col items-center text-center gap-3">
+                <!-- icon -->
+                <div class="w-12 h-12 rounded-full bg-upv-coral/10 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-upv-coral" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                    </svg>
+                </div>
+                <h2 class="font-head font-bold text-lg text-gray-800">delete forever?</h2>
+                <p class="text-sm text-gray-400">this action is permanent and cannot be undone. the org and all its data will be gone.</p>
+            </div>
+
+            <div class="flex gap-2 mt-6">
+                <button onclick="closeDeleteModal()"
+                    class="flex-1 border-2 border-gray-200 text-gray-500 text-sm font-semibold py-2 rounded-full hover:bg-gray-50 transition-colors">
+                    cancel
+                </button>
+                <form id="deleteConfirmForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="flex-1 bg-upv-coral text-white text-sm font-semibold py-2 px-6 rounded-full hover:opacity-90 transition-opacity">
+                        yes, delete
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -162,6 +186,19 @@
                     item.style.backgroundColor = '';
                     item.style.borderColor = '';
                 });
+            });
+
+            function openDeleteModal(action) {
+                document.getElementById('deleteConfirmForm').action = action;
+                document.getElementById('deleteConfirmModal').classList.remove('hidden');
+            }
+
+            function closeDeleteModal() {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            }
+
+            document.getElementById('deleteConfirmModal').addEventListener('click', function(e) {
+                if (e.target === this) closeDeleteModal();
             });
         </script>
     @endpush

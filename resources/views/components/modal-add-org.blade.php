@@ -6,7 +6,7 @@
 
         <!-- close button -->
         <button onclick="closeAddOrgModal()"
-            class="absolute top-4 right-5 text-gray-500 text-xl font-bold leading-none z-10 hover:opacity-80 transition-opacity duration-150">
+            class="absolute top-4 right-5 z-[50] text-red-400 text-xl font-bold leading-none hover:opacity-80 transition-opacity duration-150">
             ✕
         </button>
 
@@ -82,19 +82,27 @@
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
                                 Name of the org?
                             </label>
-                            <input type="text" name="name" placeholder="Type name here..."
+                            <input type="text" name="name" placeholder="Type name here..." maxlength="150"
                                 class="w-full border-2 border-upv-green rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                         </div>
 
                         <!-- description -->
-                        <div class="flex flex-col flex-1">
+                       <div class="flex flex-col flex-1">
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
-                                Describe the org
+                                Describe the org 
                             </label>
-                            <textarea name="description" placeholder="Type description here..." rows="5"
+                            <textarea 
+                                name="description" 
+                                placeholder="Type description here..." 
+                                rows="5"
+                                maxlength="600"
+                                id="description"
                                 class="w-full h-full border-2 border-upv-green rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none resize-none font-body"></textarea>
-                        </div>
 
+                            <span id="charCount" class="text-xs text-gray-500 mt-1 text-right">
+                                0 / 600 characters
+                            </span>
+                        </div>
                     </div>
 
                     <div class="flex flex-col gap-4">
@@ -205,6 +213,13 @@
 </div>
 
 <script>
+    const textarea = document.getElementById('description');
+    const charCount = document.getElementById('charCount');
+
+    textarea.addEventListener('input', function () {
+        charCount.textContent = textarea.value.length + " / 600 characters";
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('addOrgModal').addEventListener('click', function(e) {
             if (e.target === this) closeAddOrgModal();
