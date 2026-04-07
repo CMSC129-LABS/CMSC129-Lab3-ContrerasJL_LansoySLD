@@ -19,13 +19,6 @@ The goal of this project is to:
 
 ---
 
-## Features
-
-- Browse and view all added organizations
-- View detailed information about organizations (Type, Number of Members, Email)
-
----
-
 ## Installation & Setup
 
 ### 1. Clone the repository
