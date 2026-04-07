@@ -25,7 +25,7 @@ class OrgController extends Controller
             $query->whereIn('type', $request->filter_type);
         }
 
-        $orgs = $query->get();
+        $orgs = $query->orderBy('updated_at', 'desc')->get();
         $selected = $orgs->first();
 
         return view('orgs.index', compact('orgs', 'selected'));
@@ -69,7 +69,7 @@ class OrgController extends Controller
 
         return response()->json($orgs);
     }
-    
+
     // show org details
     public function show(Request $request, $id)
     {
@@ -87,7 +87,7 @@ class OrgController extends Controller
             $query->whereIn('type', $request->filter_type);
         }
 
-        $orgs = $query->get();
+        $orgs = $query->orderBy('updated_at', 'desc')->get();
         $selected = $orgs->firstWhere('id', $id) ?? $orgs->first();
 
         return view('orgs.index', compact('orgs', 'selected'));
@@ -171,7 +171,7 @@ class OrgController extends Controller
         }
 
         $org = Organization::create($data);
-        
+
         // return redirect()->route('orgs.index');
         return redirect()->route('orgs.show', $org)->with('success', 'org created successfully.');
     }
