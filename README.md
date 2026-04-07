@@ -19,13 +19,6 @@ The goal of this project is to:
 
 ---
 
-## Features
-
-- Browse and view all added organizations
-- View detailed information about organizations (Type, Number of Members, Email)
-
----
-
 ## Installation & Setup
 
 ### 1. Clone the repository
@@ -55,16 +48,16 @@ php artisan key:generate
 ## Migration commands goes here
  
 ## Application Preview
-| Dashboard | Archived Orgs |
-| :---: | :---: |
-| <img src="screenshots/dashboard.png" width="750"> | <img src="screenshots/archived.png" width="750"> |
-
-| Search / Filter | Add New Organization |
-| :---: | :---: |
-| <img src="screenshots/search.png" width="750"> | <img src="screenshots/addorg.png" width="750"> |
-
-| Edit Organization |
+| Dashboard |
 | :---: |
+| <img src="screenshots/dashboard.png" width="750"> |
+| Archived |
+ <img src="screenshots/archived.png" width="750"> |
+| Search / Filter |
+| <img src="screenshots/search.png" width="750"> | 
+| Add New Organization |
+| <img src="screenshots/addorg.png" width="750"> |
+| Edit Organization |
 | <img src="screenshots/editorg.png" width="750"> |
 ---
 
