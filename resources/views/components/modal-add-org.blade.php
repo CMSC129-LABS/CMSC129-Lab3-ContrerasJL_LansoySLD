@@ -6,7 +6,7 @@
 
         <!-- close button -->
         <button onclick="closeAddOrgModal()"
-            class="absolute top-4 right-5 z-[50] text-red-400 text-xl font-bold leading-none hover:opacity-80 transition-opacity duration-150">
+            class="absolute top-4 right-5 text-gray-500 text-xl font-bold leading-none z-10 hover:opacity-80 transition-opacity duration-150">
             ✕
         </button>
 
@@ -80,29 +80,21 @@
                         <!-- name org -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
-                                Name of the org?
+                                Name of the org? <span class="text-red-500 required-asterisk" data-for="add-name">*</span>
                             </label>
-                            <input type="text" name="name" placeholder="Type name here..." maxlength="150"
+                            <input type="text" name="name" id="add-name" placeholder="Type name here..." required
                                 class="w-full border-2 border-upv-green rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                         </div>
 
                         <!-- description -->
-                       <div class="flex flex-col flex-1">
+                        <div class="flex flex-col flex-1">
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
-                                Describe the org 
+                                Describe the org <span class="text-red-500 required-asterisk" data-for="add-description">*</span>
                             </label>
-                            <textarea 
-                                name="description" 
-                                placeholder="Type description here..." 
-                                rows="5"
-                                maxlength="600"
-                                id="description"
+                            <textarea name="description" id="add-description" placeholder="Type description here..." rows="5" required
                                 class="w-full h-full border-2 border-upv-green rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none resize-none font-body"></textarea>
-
-                            <span id="charCount" class="text-xs text-gray-500 mt-1 text-right">
-                                0 / 600 characters
-                            </span>
                         </div>
+
                     </div>
 
                     <div class="flex flex-col gap-4">
@@ -110,16 +102,16 @@
                         <!-- active / inactive -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
-                                Active or Inactive?
+                                Active or Inactive? <span class="text-red-500 required-asterisk" data-for="add-status">*</span>
                             </label>
                             <div class="flex items-center gap-5">
                                 <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="radio" name="status" value="active" checked
+                                    <input type="radio" name="status" id="add-status" value="active" checked required
                                         class="accent-upv-green w-4 h-4">
                                     <span class="text-sm text-gray-700">active</span>
                                 </label>
                                 <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="radio" name="status" value="inactive"
+                                    <input type="radio" name="status" value="inactive" required
                                         class="accent-upv-green w-4 h-4">
                                     <span class="text-sm text-upv-maroon font-medium">inactive</span>
                                 </label>
@@ -129,7 +121,7 @@
                         <!-- Type -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
-                                Type of org?
+                                Type of org? <span class="text-red-500 required-asterisk" data-for="add-type">*</span>
                             </label>
                             <div class="relative">
                                 <span class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -139,7 +131,7 @@
                                         <path d="M8 21h8M12 17v4" />
                                     </svg>
                                 </span>
-                                <select name="type"
+                                <select name="type" id="add-type" required
                                     class="w-full border-2 border-upv-green rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-700 outline-none appearance-none bg-white font-body">
                                     <option value="academic">Academic</option>
                                     <option value="sports">Sports</option>
@@ -159,10 +151,10 @@
                             </div>
                         </div>
 
-                        <!-- unmber of members -->
+                        <!-- number of members -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
-                                Number of members?
+                                Number of members? <span class="text-red-500 required-asterisk" data-for="add-members">*</span>
                             </label>
                             <div class="relative">
                                 <span class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -172,7 +164,7 @@
                                         <circle cx="9" cy="7" r="4" />
                                     </svg>
                                 </span>
-                                <input type="number" name="members" placeholder="Type no. here..."
+                                <input type="number" name="members" id="add-members" placeholder="Type no. here..." required
                                     class="w-full border-2 border-upv-green rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                             </div>
                         </div>
@@ -180,7 +172,7 @@
                         <!-- email -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
-                                Email?
+                                Email? <span class="text-red-500 required-asterisk" data-for="add-email">*</span>
                             </label>
                             <div class="relative">
                                 <span class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -191,7 +183,7 @@
                                         <polyline points="22,6 12,13 2,6" />
                                     </svg>
                                 </span>
-                                <input type="email" name="email" placeholder="Type email here..."
+                                <input type="email" name="email" id="add-email" placeholder="Type email here..." required
                                     class="w-full border-2 border-upv-green rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                             </div>
                         </div>
@@ -213,16 +205,26 @@
 </div>
 
 <script>
-    const textarea = document.getElementById('description');
-    const charCount = document.getElementById('charCount');
-
-    textarea.addEventListener('input', function () {
-        charCount.textContent = textarea.value.length + " / 600 characters";
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('addOrgModal').addEventListener('click', function(e) {
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('addOrgModal').addEventListener('click', function (e) {
             if (e.target === this) closeAddOrgModal();
         });
+
+        // text / number / email / textarea inputs
+        document.querySelectorAll('#addOrgModal input[type="text"], #addOrgModal input[type="number"], #addOrgModal input[type="email"], #addOrgModal textarea').forEach(function (field) {
+            field.addEventListener('input', function () {
+                const asterisk = document.querySelector(`.required-asterisk[data-for="${field.id}"]`);
+                if (!asterisk) return;
+                asterisk.style.display = field.value.trim() !== '' ? 'none' : '';
+            });
+        });
+
+        // radio buttons — hide asterisk once any option is picked (it's checked by default so hide immediately)
+        const addStatusAsterisk = document.querySelector('.required-asterisk[data-for="add-status"]');
+        if (addStatusAsterisk) addStatusAsterisk.style.display = 'none';
+
+        // select — always has a value so hide asterisk immediately
+        const addTypeAsterisk = document.querySelector('.required-asterisk[data-for="add-type"]');
+        if (addTypeAsterisk) addTypeAsterisk.style.display = 'none';
     });
 </script>

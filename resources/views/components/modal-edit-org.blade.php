@@ -6,7 +6,7 @@
 
         <!-- close button -->
         <button onclick="closeEditOrgModal()"
-            class="absolute top-4 right-5 z-[50] text-red-400 text-xl font-bold leading-none hover:opacity-80 transition-opacity duration-150">
+            class="absolute top-4 right-5 text-gray-500 text-xl font-bold leading-none z-10">
             ✕
         </button>
 
@@ -73,27 +73,19 @@
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
                                 Name of the org?
                             </label>
-                            <input type="text" id="editOrgName" name="name" placeholder="Type name here..."  maxlength="150"
+                            <input type="text" id="editOrgName" name="name" placeholder="Type name here..." required
                                 class="w-full border-2 border-upv-green rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                         </div>
 
                         <!-- description -->
                         <div class="flex flex-col flex-1">
                             <label class="block text-sm font-semibold text-gray-800 mb-1.5">
-                                Describe the org (600 characters max)
+                                Describe the org
                             </label>
-                            <textarea 
-                                name="description" 
-                                placeholder="Type description here..." 
-                                rows="5"
-                                maxlength="600"
-                                id="editOrgDesc"
+                            <textarea id="editOrgDesc" name="description" placeholder="Type description here..." rows="5" required
                                 class="w-full h-full border-2 border-upv-green rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none resize-none font-body"></textarea>
-
-                            <span id="editCharCount" class="text-xs text-gray-500 mt-1 text-right">
-                                0 / 600 characters
-                            </span>
                         </div>
+
                     </div>
 
                     <div class="flex flex-col gap-4">
@@ -105,12 +97,12 @@
                             </label>
                             <div class="flex items-center gap-5">
                                 <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="radio" name="status" value="active"
+                                    <input type="radio" name="status" value="active" required
                                         class="accent-upv-green w-4 h-4">
                                     <span class="text-sm text-gray-700">active</span>
                                 </label>
                                 <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="radio" name="status" value="inactive"
+                                    <input type="radio" name="status" value="inactive" required
                                         class="accent-upv-green w-4 h-4">
                                     <span class="text-sm text-upv-maroon font-medium">inactive</span>
                                 </label>
@@ -130,7 +122,7 @@
                                         <path d="M8 21h8M12 17v4" />
                                     </svg>
                                 </span>
-                                <select id="editOrgType" name="type"
+                                <select id="editOrgType" name="type" required
                                     class="w-full border-2 border-upv-green rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-700 outline-none appearance-none bg-white font-body">
                                     <option value="academic">Academic</option>
                                     <option value="sports">Sports</option>
@@ -164,7 +156,7 @@
                                     </svg>
                                 </span>
                                 <input type="number" id="editOrgMembers" name="members"
-                                    placeholder="Type no. here..."
+                                    placeholder="Type no. here..." required
                                     class="w-full border-2 border-upv-green rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                             </div>
                         </div>
@@ -184,7 +176,7 @@
                                     </svg>
                                 </span>
                                 <input type="email" id="editOrgEmail" name="email"
-                                    placeholder="Type email here..."
+                                    placeholder="Type email here..." required
                                     class="w-full border-2 border-upv-green rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-700 placeholder-gray-400 outline-none font-body">
                             </div>
                         </div>
@@ -204,29 +196,38 @@
         </form>
     </div>
 </div>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('editOrgModal').addEventListener('click', function (e) {
+            if (e.target === this) closeEditOrgModal();
+        });
 
-        const textarea = document.getElementById('editOrgDesc');
-        const charCount = document.getElementById('editCharCount');
-        const editModal = document.getElementById('editOrgModal');
-
-        function updateCharCount() {
-            if (textarea && charCount) {
-                charCount.textContent = textarea.value.length + " / 600 characters";
-            }
-        }
-
-        if (textarea) {
-            textarea.addEventListener('input', updateCharCount);
-            updateCharCount();
-        }
-
-        if (editModal) {
-            editModal.addEventListener('click', function(e) {
-                if (e.target === this) closeEditOrgModal();
+        // text / number / email / textarea inputs
+        document.querySelectorAll('#editOrgModal input[type="text"], #editOrgModal input[type="number"], #editOrgModal input[type="email"], #editOrgModal textarea').forEach(function (field) {
+            field.addEventListener('input', function () {
+                const asterisk = document.querySelector(`.required-asterisk[data-for="${field.id}"]`);
+                if (!asterisk) return;
+                asterisk.style.display = field.value.trim() !== '' ? 'none' : '';
             });
-        }
+        });
 
+        document.querySelectorAll('#editOrgModal input[type="radio"][name="status"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                const asterisk = document.querySelector('.required-asterisk[data-for="edit-status"]');
+                if (asterisk) asterisk.style.display = 'none';
+            });
+        });
+
+        const editTypeAsterisk = document.querySelector('.required-asterisk[data-for="editOrgType"]');
+        if (editTypeAsterisk) editTypeAsterisk.style.display = 'none';
+
+        window.hideFilledAsterisks = function () {
+            document.querySelectorAll('#editOrgModal input, #editOrgModal textarea').forEach(field => {
+                field.dispatchEvent(new Event('input'));
+                field.dispatchEvent(new Event('change'));
+            });
+        };
     });
+
 </script>
