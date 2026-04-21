@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@include('components.chatbot')
+@include('chat.components.chat-widget')
 @use('Illuminate\Support\Facades\Storage')
 
 @section('content')

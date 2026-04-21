@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@include('components.chatbot')
+@include('chat.components.chat-widget')
 @section('content')
     <div class="w-full mx-auto px-6 py-6 grid grid-cols-2 gap-5 items-start">
 
