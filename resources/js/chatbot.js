@@ -234,4 +234,23 @@
       .replace(/>/g, '&gt;');
   }
 
+  // CHANGED: restore history on load, or show welcome message if no history
+  if (history.length > 0) {
+    history.forEach(turn => {
+      appendMsg(
+        turn.role === 'user' ? 'user' : 'bot',
+        turn.role === 'user' ? escapeHtml(turn.content) : formatBotText(turn.content)
+      );
+    });
+    messages.scrollTop = messages.scrollHeight;
+  } else {
+    appendMsg('bot', `👋 hi! i'm <strong>Hubby</strong>, your UPV Org Hub assistant.<br><br>
+      Ask me things like:<br>
+      <span class="suggestion" data-q="What orgs are currently active?">📋 What orgs are active?</span>
+      <span class="suggestion" data-q="Show me performing arts organizations">🎭 Performing arts orgs</span>
+      <span class="suggestion" data-q="Which orgs have less than 100 members?">👥 Orgs under 100 members</span>
+      <span class="suggestion" data-q="I'm a writer, what org would suit me?">✍️ Orgs for writers</span>`
+    );
+  }
+
 })();

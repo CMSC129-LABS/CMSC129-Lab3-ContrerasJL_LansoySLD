@@ -13,11 +13,12 @@ Route::get('/orgs/archived', [OrgController::class, 'archived'])->name('orgs.arc
 Route::get('/orgs/archived/{id}', [OrgController::class, 'archivedShow'])->name('orgs.archived.show');
 
 // wildcard routes last
-Route::get('/orgs/{id}', [OrgController::class, 'show'])->name('orgs.show');
 Route::put('/orgs/{id}', [OrgController::class, 'update'])->name('orgs.update');
 Route::delete('/orgs/{id}', [OrgController::class, 'destroy'])->name('orgs.destroy');
 Route::put('/orgs/{id}/archive', [OrgController::class, 'archive'])->name('orgs.archive');
 Route::put('/orgs/{id}/restore', [OrgController::class, 'restore'])->name('orgs.restore');
+Route::get('/orgs/{id}', [OrgController::class, 'show'])->name('orgs.show');
+
 
 Route::post('/chatbot/message', [ChatbotController::class, 'message'])
     ->name('chatbot.message')

@@ -175,4 +175,12 @@ class OrgController extends Controller
         // return redirect()->route('orgs.index');
         return redirect()->route('orgs.show', $org)->with('success', 'org created successfully.');
     }
+
+    public function list()
+    {
+        $orgs = Organization::where('is_archived', false)
+            ->latest()
+            ->get();
+        return response()->json($orgs);
+    }
 }
