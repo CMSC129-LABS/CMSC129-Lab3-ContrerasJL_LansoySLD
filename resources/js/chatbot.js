@@ -4,8 +4,7 @@
   const executeUrl     = wrapper?.dataset.executeUrl;
   const window_el      = document.getElementById('chat-window');
   const toggle         = document.getElementById('chat-toggle');
-  const toggleLabel    = document.getElementById('chat-toggle-label');
-  const notifDot       = document.getElementById('chat-notif-dot');
+  const notifDot       = document.getElementById('chat-notif-dot');  // may be null
   const messages       = document.getElementById('chat-messages');
   const typingEl       = document.getElementById('chat-typing');
   const input          = document.getElementById('chat-input');
@@ -27,10 +26,9 @@
   // ── open/close chat window ──
   toggle?.addEventListener('click', () => {
     const isOpen = window_el.classList.toggle('open');
-
-
-    if (toggleLabel) toggleLabel.textContent = isOpen ? 'close' : 'ask hubby';
-    if (isOpen) { notifDot.style.display = 'none'; input.focus(); }
+    const label = document.getElementById('chat-toggle-label');
+    if (label) label.textContent = isOpen ? 'close' : 'ask hubby';
+    if (isOpen) { if (notifDot) notifDot.style.display = 'none'; input?.focus(); }
   });
 
   // ── CRUD mode toggle ──
@@ -96,7 +94,7 @@
 
     input.value = '';
     input.style.height = 'auto';
-    notifDot.style.display = 'none';
+    if (notifDot) notifDot.style.display = 'none';
 
     appendMsg('user', escapeHtml(text));
     history.push({ role: 'user', content: text });

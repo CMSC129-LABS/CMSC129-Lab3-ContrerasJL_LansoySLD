@@ -191,6 +191,8 @@ php artisan migrate:fresh --seed
 | <img src="screenshots/addorg.png"> |
 | Edit Organization |
 | <img src="screenshots/editorg.png"> |
+| AI Query |
+| <img src="screenshots/aiquery.png"> |
 ---
 
 ## Features
