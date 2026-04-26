@@ -21,4 +21,8 @@ Route::put('/orgs/{id}/restore', [OrgController::class, 'restore'])->name('orgs.
 
 Route::post('/chatbot/message', [ChatbotController::class, 'message'])
     ->name('chatbot.message')
-    ->middleware('web'); 
+    ->middleware('web');
+
+Route::post('/chatbot/execute', [ChatbotController::class, 'executeCrud'])
+    ->name('chatbot.execute')
+    ->middleware('web');

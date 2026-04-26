@@ -1,86 +1,95 @@
-
 (function () {
-  const toggle      = document.getElementById('chat-toggle');
-  const window_el   = document.getElementById('chat-window');
-  const iconOpen    = document.getElementById('chat-icon-open');
-  const iconClose   = document.getElementById('chat-icon-close');
-  const notifDot    = document.getElementById('chat-notif-dot');
-  const messages    = document.getElementById('chat-messages');
-  const typingEl    = document.getElementById('chat-typing');
-  const input       = document.getElementById('chat-input');
-  const sendBtn     = document.getElementById('chat-send');
-  const clearBtn    = document.getElementById('chat-clear');
+  const wrapper        = document.getElementById('upv-chatbot-wrapper');
+  const chatUrl        = wrapper?.dataset.url;
+  const executeUrl     = wrapper?.dataset.executeUrl;
+  const window_el      = document.getElementById('chat-window');
+  const toggle         = document.getElementById('chat-toggle');
+  const iconOpen       = document.getElementById('chat-icon-open');
+  const iconClose      = document.getElementById('chat-icon-close');
+  const notifDot       = document.getElementById('chat-notif-dot');
+  const messages       = document.getElementById('chat-messages');
+  const typingEl       = document.getElementById('chat-typing');
+  const input          = document.getElementById('chat-input');
+  const sendBtn        = document.getElementById('chat-send');
+  const clearBtn       = document.getElementById('chat-clear');
+  const crudToggle     = document.getElementById('crud-toggle-input');
+  const crudBanner     = document.getElementById('crud-banner');
+  const confirmOverlay = document.getElementById('crud-confirm-overlay');
+  const confirmText    = document.getElementById('crud-confirm-text');
+  const confirmOk      = document.getElementById('crud-ok-btn');
+  const confirmCancel  = document.getElementById('crud-cancel-btn');
 
-  let isOpen = false;
-  let history = []; // [{role, content}]
-  let isLoading = false;
+  let isLoading   = false;
+  let crudMode    = false;
+  let pendingCrud = null;
+  let history     = [];
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
-  // toggle open/close
-  toggle.addEventListener('click', () => {
-    isOpen = !isOpen;
-    window_el.classList.toggle('open', isOpen);
-    iconOpen.style.display  = isOpen ? 'none'  : 'flex';
-    iconClose.style.display = isOpen ? 'flex'  : 'none';
-    notifDot.style.display  = isOpen ? 'none'  : '';
-    if (isOpen) { setTimeout(() => input.focus(), 180); }
+  // ── open/close chat window ──
+  toggle?.addEventListener('click', () => {
+    const isOpen = window_el.classList.toggle('open');
+    iconOpen.style.display  = isOpen ? 'none' : '';
+    iconClose.style.display = isOpen ? '' : 'none';
+    if (isOpen) { notifDot.style.display = 'none'; input.focus(); }
   });
 
-  // clear history
-  clearBtn.addEventListener('click', () => {
+  // ── CRUD mode toggle ──
+  crudToggle?.addEventListener('change', () => {
+    crudMode = crudToggle.checked;
+    crudBanner.style.display = crudMode ? 'flex' : 'none';
+    input.placeholder = crudMode
+      ? 'Add, update, or archive orgs…'
+      : 'Ask about UPV organizations…';
+    appendMsg('bot', crudMode
+      ? '⚡ crud mode on baby! now you can add, update, or archive orgs. just tell me what to do~'
+      : '🔍 back to query mode! ask me anything about the orgs 😊'
+    );
+  });
+
+  // ── clear history ──
+  clearBtn?.addEventListener('click', () => {
     history = [];
     messages.innerHTML = `
       <div class="msg bot-msg">
-        <div class="msg-bubble">
-          Chat cleared! Ask me anything about UPV organizations. 😊
-        </div>
+        <div class="msg-bubble">🧹 cleared! what do you want to know, baby?</div>
       </div>`;
   });
 
-  // suggestion chips
-  messages.addEventListener('click', (e) => {
+  // ── suggestion chips ──
+  messages?.addEventListener('click', (e) => {
     if (e.target.classList.contains('suggestion')) {
       input.value = e.target.dataset.q;
       sendMessage();
     }
   });
 
-  // Send on Enter (Shift+Enter = newline) 
-  input.addEventListener('keydown', (e) => {
+  // ── send on Enter ──
+  input?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
-  sendBtn.addEventListener('click', sendMessage);
+  sendBtn?.addEventListener('click', sendMessage);
 
-  // Auto-resize textarea
-  input.addEventListener('input', () => {
+  // ── auto-resize textarea ──
+  input?.addEventListener('input', () => {
     input.style.height = 'auto';
     input.style.height = Math.min(input.scrollHeight, 100) + 'px';
   });
 
-  function appendMsg(role, html) {
-    const div = document.createElement('div');
-    div.className = `msg ${role === 'user' ? 'user-msg' : 'bot-msg'}`;
-    div.innerHTML = `<div class="msg-bubble">${html}</div>`;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-    return div;
-  }
+  // ── confirm dialog buttons ──
+  confirmOk?.addEventListener('click', async () => {
+    if (!pendingCrud) return;
+    confirmOverlay.style.display = 'none';
+    await executeCrudAction(pendingCrud.action, pendingCrud.data);
+    pendingCrud = null;
+  });
 
-  function setLoading(state) {
-    isLoading = state;
-    sendBtn.disabled = state;
-    input.disabled   = state;
-    typingEl.style.display = state ? 'block' : 'none';
-    if (state) messages.scrollTop = messages.scrollHeight;
-  }
+  confirmCancel?.addEventListener('click', () => {
+    confirmOverlay.style.display = 'none';
+    pendingCrud = null;
+    appendMsg('bot', 'okay cancelled baby! anything else? 😊');
+  });
 
-  function formatBotText(text) {
-    // Basic markdown-ish formatting
-    return text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\n/g, '<br>');
-  }
-
+  // ── main send ──
   async function sendMessage() {
     const text = input.value.trim();
     if (!text || isLoading) return;
@@ -94,35 +103,134 @@
     setLoading(true);
 
     try {
-        const url = document.getElementById('upv-chatbot-wrapper').dataset.url;
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            },
-            body: JSON.stringify({ message: text, history: history.slice(-10) }),
+      const res = await fetch(chatUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          message:   text,
+          history:   history.slice(-10),
+          crud_mode: crudMode,
+        }),
       });
 
       const data = await res.json();
       setLoading(false);
 
       if (data.error) {
-        appendMsg('bot', '⚠️ Error: ' + JSON.stringify(data));  // show full error
+        appendMsg('bot', '⚠️ error: ' + escapeHtml(data.error));
         return;
-        }
+      }
 
-      const botText = data.reply || 'I couldn\'t find an answer. Try rephrasing?';
+      // ── CRUD action detected ──
+      if (crudMode && data.crud_action) {
+        appendMsg('bot', formatBotText(data.reply));
+        history.push({ role: 'model', content: data.reply });
+
+        if (data.requires_confirm) {
+          // UPDATE or ARCHIVE — show confirm dialog
+          const label = data.crud_action === 'ARCHIVE'
+            ? `archive "${data.crud_data?.name || 'this org'}"`
+            : `update org #${data.crud_data?.id}`;
+          confirmText.textContent = `are you sure you want to ${label}? 👀`;
+          confirmOverlay.style.display = 'flex';
+          pendingCrud = { action: data.crud_action, data: data.crud_data };
+        } else {
+          // CREATE — no confirm needed, execute right away
+          await executeCrudAction(data.crud_action, data.crud_data);
+        }
+        return;
+      }
+
+      // ── normal query response ──
+      const botText = data.reply || "i couldn't find an answer baby, try rephrasing?";
       appendMsg('bot', formatBotText(botText));
       history.push({ role: 'model', content: botText });
 
     } catch (err) {
       setLoading(false);
-      appendMsg('bot', '⚠️ Network error. Please check your connection.' + JSON.stringify(data));
+      appendMsg('bot', '⚠️ network error baby, check your connection!');
+      console.error(err);
     }
   }
 
-  function escapeHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // ── execute CRUD via /chatbot/execute ──
+  async function executeCrudAction(action, data) {
+    setLoading(true);
+    try {
+      const res = await fetch(executeUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ action, data }),
+      });
+
+      const result = await res.json();
+      setLoading(false);
+
+      if (result.success) {
+        let msg = '';
+        if (action === 'CREATE') {
+          msg = `✅ done baby! **${result.org?.name}** has been created~\n\n📸 *note: to add a cover photo or logo, go to the org list and edit it manually!*`;
+        } else if (action === 'UPDATE') {
+          msg = `✅ updated **${result.org?.name}** successfully baby!\n\n📸 *to change the photo, edit it manually from the org list!*`;
+        } else if (action === 'ARCHIVE') {
+          msg = `🗑️ archived successfully baby! it's in the archives now~`;
+        }
+        appendMsg('bot', formatBotText(msg));
+        history.push({ role: 'model', content: msg });
+
+        // refresh page after short delay so org list updates
+        setTimeout(() => window.location.reload(), 1800);
+
+      } else {
+        appendMsg('bot', `⚠️ failed baby: ${result.message || 'something went wrong'}`);
+      }
+
+    } catch (err) {
+      setLoading(false);
+      appendMsg('bot', '⚠️ crud failed baby, try again!');
+      console.error(err);
+    }
   }
+
+  // ── helpers ──
+  function appendMsg(role, html) {
+    const div = document.createElement('div');
+    div.className = `msg ${role === 'user' ? 'user-msg' : 'bot-msg'}`;
+    div.innerHTML = `<div class="msg-bubble">${html}</div>`;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+    return div;
+  }
+
+  function formatBotText(text) {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/^- (.+)/gm, '• $1')
+      .replace(/\n/g, '<br>');
+  }
+
+  function setLoading(state) {
+    isLoading        = state;
+    sendBtn.disabled = state;
+    input.disabled   = state;
+    typingEl.style.display = state ? 'block' : 'none';
+    if (state) messages.scrollTop = messages.scrollHeight;
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
 })();
