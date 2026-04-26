@@ -4,8 +4,7 @@
   const executeUrl     = wrapper?.dataset.executeUrl;
   const window_el      = document.getElementById('chat-window');
   const toggle         = document.getElementById('chat-toggle');
-  const iconOpen       = document.getElementById('chat-icon-open');
-  const iconClose      = document.getElementById('chat-icon-close');
+  const toggleLabel    = document.getElementById('chat-toggle-label');
   const notifDot       = document.getElementById('chat-notif-dot');
   const messages       = document.getElementById('chat-messages');
   const typingEl       = document.getElementById('chat-typing');
@@ -28,8 +27,9 @@
   // ── open/close chat window ──
   toggle?.addEventListener('click', () => {
     const isOpen = window_el.classList.toggle('open');
-    iconOpen.style.display  = isOpen ? 'none' : '';
-    iconClose.style.display = isOpen ? '' : 'none';
+
+
+    if (toggleLabel) toggleLabel.textContent = isOpen ? 'close' : 'ask hubby';
     if (isOpen) { notifDot.style.display = 'none'; input.focus(); }
   });
 
@@ -121,7 +121,8 @@
       setLoading(false);
 
       if (data.error) {
-        appendMsg('bot', '⚠️ error: ' + escapeHtml(data.error));
+        // backend returns error (rate limit)
+        appendMsg('bot', "hmm, something went wrong on my end baby. try again in a bit! 🙏");
         return;
       }
 
@@ -152,6 +153,7 @@
 
     } catch (err) {
       setLoading(false);
+      // network error
       appendMsg('bot', '⚠️ network error baby, check your connection!');
       console.error(err);
     }
@@ -190,7 +192,8 @@
         setTimeout(() => window.location.reload(), 1800);
 
       } else {
-        appendMsg('bot', `⚠️ failed baby: ${result.message || 'something went wrong'}`);
+        // appendMsg('bot', `⚠️ failed baby: ${result.message || 'something went wrong'}`);
+        appendMsg('bot', "oops, i wasn't able to do that baby. try again or do it manually! 😊");
       }
 
     } catch (err) {

@@ -6,6 +6,18 @@ UPV Org Hub is a web application designed for UPV constituents to explore, disco
 
 > By Julia Contreras and Sam Lansoy
 
+## Meet Hubby: Your AI Assistant
+UPV Org Hub features Hubby, an intelligent, casual, and slightly sassy AI assistant designed to help you manage and navigate the org directory using natural language.
+
+### AI Features
+* **Conversational Search:** Ask Hubby about specific types of orgs or member counts (e.g., "baby, what are the academic orgs available?").
+
+* **AI-Powered CRUD:** Hubby can create, update, and archive organizations based on your chat commands.
+
+* **Multilingual Support:** Hubby understands both English and Hiligaynon.
+
+* **Persona:** Hubby is friendly, types in lowercase, and calls everyone "baby."
+
 ---
 
 ## Purpose
@@ -24,14 +36,15 @@ The goal of this project is to:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/sam-cookie/CMSC129-Lab2-ContrerasJL_LansoySLD
-cd CMSC129-Lab2-ContrerasJL_LansoySLD
+git clone https://github.com/sam-cookie/CMSC129-Lab3-ContrerasJL_LansoySLD
+cd CMSC129-Lab3-ContrerasJL_LansoySLD
 ```
 
 ### 2. Install dependencies
 
 ```bash
 npm install
+composer install
 ```
 
 ### 3. Environment setup
@@ -41,6 +54,16 @@ Copy the `.env.example` file and configure it:
 ```bash
 cp .env.example .env
 php artisan key:generate
+```
+
+### 4. AI Configuration 
+To enable the AI features, you must provide a Google Gemini API Key:
+
+Obtain an API key from Google AI Studio.
+
+Add it to your .env file:
+```
+GEMINI_API_KEY=your_google_gemini_api_key_here
 ```
 
 ## Database Setup
@@ -176,6 +199,7 @@ php artisan migrate:fresh --seed
 * **Full CRUD Functionality** – Ability to **Create** new entries, **Read** details, **Update** existing information, and **Delete** organizations from the list.
 * **Archive System** – A dedicated "Archived" section to manage and view organizations.
 * **Real-time Search** – Integrated search functionality to filter through the list and find specific organizations instantly.
+* **AI Integration** – Perform all the above actions simply by chatting with ***Hubby***.
 
 ## MVC Architecture & Project Structure
 
@@ -197,18 +221,20 @@ Located in `app/Http/Controllers/`.
 
 Here is the structured project layout:
 
-```text
+```
 UPV-Org-Hub/
 ├── app/
 │   ├── Http/
 │   │   └── Controllers/      # OrgController.php (C in MVC)
-│   └── Models/               # Organization.php (M in MVC)
+│   ├── Models/               # Organization.php (M in MVC)
+│   │              
+│   └── Services/            # Hubby's AI Logic (AIService, PromptService, etc.)
 ├── database/
 │   ├── migrations/           # Database table definitions
 │   └── seeders/              # OrganizationSeeder.php for sample data
 ├── public/                   # Compiled assets (CSS/JS)
 ├── resources/
-│   └── views/                # (V in MVC)
+│   └── views/                # (V in MVC) Chat UI
 │       ├── components/       # Reusable Modals and Toasts
 │       ├── layouts/          # Master app layout
 │       └── orgs/             # index and archived Blade templates
@@ -217,3 +243,4 @@ UPV-Org-Hub/
 ├── screenshots/              # Project documentation images
 ├── .env                      # Environment configuration (Private)
 └── README.md                 # Project documentation
+```

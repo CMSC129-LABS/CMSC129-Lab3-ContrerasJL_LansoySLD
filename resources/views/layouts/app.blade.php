@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/chatbot.js'])
+    @vite(['resources/css/app.css', 'resources/css/chat-widget.css', 'resources/js/chatbot.js'])
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -227,6 +227,14 @@
                 archived orgs
             </a>
 
+            <!-- ask hubby chat toggle -->
+            <button id="chat-toggle" aria-label="Open UPV Org Hub Assistant">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+                </svg>
+                <span id="chat-toggle-label">ask hubby</span>
+            </button>
+
         </div>
     </nav>
 
@@ -322,6 +330,10 @@
     </script>
 
     <x-toast />
+
+    {{-- Chat widget (outside nav to avoid stacking context issues) --}}
+    @include('chat/components.chat-widget')
+
 </body>
 
 </html>

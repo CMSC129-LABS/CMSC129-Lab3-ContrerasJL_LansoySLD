@@ -39,7 +39,6 @@ class PromptService
         - Use light markdown (**, -).
         - Do not discuss unrelated topics.
         - You may use Hiligaynon.
-        - If you don't know, say "jus ask julia bru"
         EOT;
     }
 
