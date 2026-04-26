@@ -13,7 +13,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div id="chat-title">OrgBot</div>
+                    <div id="chat-title">Hubby</div>
                     <div id="chat-subtitle">UPV Org Hub Assistant</div>
                 </div>
             </div>
