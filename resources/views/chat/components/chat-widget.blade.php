@@ -13,7 +13,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div id="chat-title">Hubby</div>
+                    <div id="chat-title">OrgBot</div>
                     <div id="chat-subtitle">UPV Org Hub Assistant</div>
                 </div>
             </div>
@@ -51,16 +51,18 @@
 
         <!-- messages -->
         <div id="chat-messages">
-            {{-- <div class="msg bot-msg">
+            <div class="msg bot-msg">
                 <div class="msg-bubble">
                     👋 Hi! I'm <strong>Hubby</strong>, your UPV Org Hub assistant.<br><br>
                     Ask me things like:<br>
                     <span class="suggestion" data-q="What orgs are currently active?">📋 What orgs are active?</span>
-                    <span class="suggestion" data-q="Show me performing arts organizations">🎭 Performing arts orgs</span>
-                    <span class="suggestion" data-q="Which orgs have less than 100 members?">👥 Orgs under 100 members</span>
+                    <span class="suggestion" data-q="Show me performing arts organizations">🎭 Performing arts
+                        orgs</span>
+                    <span class="suggestion" data-q="Which orgs have less than 100 members?">👥 Orgs under 100
+                        members</span>
                     <span class="suggestion" data-q="I'm a writer, what org would suit me?">✍️ Orgs for writers</span>
                 </div>
-            </div> --}}
+            </div>
         </div>
 
         <div id="chat-typing" style="display:none;">

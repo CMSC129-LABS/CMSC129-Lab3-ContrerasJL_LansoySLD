@@ -1,9 +1,13 @@
 <?php
+
 namespace App\Services;
+
 use Illuminate\Support\Facades\Http;
 
-class AIService {
-    public function generate(array $contents): string {
+class AIService
+{
+    public function generate(array $contents): string
+    {
         $apiKey = env('GEMINI_API_KEY');
         $model  = 'gemini-2.5-flash-lite';
         // $model = 'gemini-1.5-flash';

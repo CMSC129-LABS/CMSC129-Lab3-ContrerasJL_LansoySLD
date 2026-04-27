@@ -133,7 +133,7 @@
           // UPDATE or ARCHIVE — show confirm dialog
           const label = data.crud_action === 'ARCHIVE'
             ? `archive "${data.crud_data?.name || 'this org'}"`
-            : `update org #${data.crud_data?.id}`;
+            : `update "${data.crud_data?.name || 'this org'}"`;
           confirmText.textContent = `are you sure you want to ${label}? 👀`;
           confirmOverlay.style.display = 'flex';
           pendingCrud = { action: data.crud_action, data: data.crud_data };
@@ -177,11 +177,15 @@
       if (result.success) {
         let msg = '';
         if (action === 'CREATE') {
-          msg = `✅ done baby! **${result.org?.name}** has been created~\n\n📸 *note: to add a cover photo or logo, go to the org list and edit it manually!*`;
+            const orgName = result.org?.name ?? 'the org';
+            msg = `✅ done baby! **${orgName}** has been created~\n\n📸 *note: to add a cover photo or logo, go to the org list and edit it manually!*`;
         } else if (action === 'UPDATE') {
-          msg = `✅ updated **${result.org?.name}** successfully baby!\n\n📸 *to change the photo, edit it manually from the org list!*`;
+            const orgName = result.org?.name ?? 'the org';
+            msg = `✅ updated **${orgName}** successfully baby!\n\n📸 *to change the photo, edit it manually from the org list!*`;
         } else if (action === 'ARCHIVE') {
-          msg = `🗑️ archived successfully baby! it's in the archives now~`;
+            // extract name from message string e.g. "'dog lovers org' has been archived."
+            const orgName = result.message?.match(/'(.+?)'/)?.[1] ?? 'the org';
+            msg = `🗑️ **${orgName}** has been archived baby! it's in the archives now~`;
         }
         appendMsg('bot', formatBotText(msg));
         history.push({ role: 'model', content: msg });
@@ -190,7 +194,7 @@
         setTimeout(() => window.location.reload(), 1800);
 
       } else {
-        // appendMsg('bot', `⚠️ failed baby: ${result.message || 'something went wrong'}`);
+        // appendMsg('bot', ⚠️ failed baby: ${result.message || 'something went wrong'});
         appendMsg('bot', "oops, i wasn't able to do that baby. try again or do it manually! 😊");
       }
 
@@ -232,25 +236,6 @@
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
-  }
-
-  // CHANGED: restore history on load, or show welcome message if no history
-  if (history.length > 0) {
-    history.forEach(turn => {
-      appendMsg(
-        turn.role === 'user' ? 'user' : 'bot',
-        turn.role === 'user' ? escapeHtml(turn.content) : formatBotText(turn.content)
-      );
-    });
-    messages.scrollTop = messages.scrollHeight;
-  } else {
-    appendMsg('bot', `👋 hi! i'm <strong>Hubby</strong>, your UPV Org Hub assistant.<br><br>
-      Ask me things like:<br>
-      <span class="suggestion" data-q="What orgs are currently active?">📋 What orgs are active?</span>
-      <span class="suggestion" data-q="Show me performing arts organizations">🎭 Performing arts orgs</span>
-      <span class="suggestion" data-q="Which orgs have less than 100 members?">👥 Orgs under 100 members</span>
-      <span class="suggestion" data-q="I'm a writer, what org would suit me?">✍️ Orgs for writers</span>`
-    );
   }
 
 })();

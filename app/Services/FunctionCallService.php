@@ -6,22 +6,27 @@ use App\Models\Organization;
 
 class FunctionCallService
 {
+
     public function getOrgsForPrompt(): array
     {
-        return Organization::all()->map(fn($org) => [
-            'name'        => $org->name,
-            'type'        => $org->type        ?? 'N/A',
-            'status'      => $org->status      ?? 'N/A',
-            'members'     => $org->members     ?? 'N/A',
-            'tags'        => $org->tags        ?? '',
-            'description' => $org->description ?? '',
-        ])->toArray();
+        return Organization::where('is_archived', false)
+            ->get()->map(fn($org) => [
+                'id'          => $org->id,
+                'name'        => $org->name,
+                'type'        => $org->type        ?? 'N/A',
+                'status'      => $org->status      ?? 'N/A',
+                'members'     => $org->members     ?? 'N/A',
+                'email'       => $org->email       ?? 'N/A',
+                'description' => $org->description ?? '',
+            ])->toArray();
     }
+
+    // ── CRUD ──────────────────────────────────────────
 
     public function createOrg(array $data): array
     {
         $org = Organization::create([
-            'name'      => $data['name'],
+            'name'        => $data['name'],
             'type'        => $data['type']        ?? 'other',
             'status'      => $data['status']      ?? 'active',
             'email'       => $data['email']       ?? null,
@@ -35,7 +40,7 @@ class FunctionCallService
     public function updateOrg(int $id, array $data): array
     {
         $org = Organization::find($id);
-        if (!$org) return ['success' => false, 'message' => 'Organization not found.'];
+        if (!$org) return ['success' => false, 'message' => 'Org not found.'];
         $org->update(array_filter($data, fn($v) => $v !== null));
         return ['success' => true, 'org' => $org->fresh()->toArray()];
     }
