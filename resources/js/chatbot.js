@@ -191,7 +191,7 @@
         history.push({ role: 'model', content: msg });
 
         // refresh page after short delay so org list updates
-        setTimeout(() => window.location.reload(), 1800);
+        setTimeout(() => window.location.reload(), 1000);
 
       } else {
         // appendMsg('bot', ⚠️ failed baby: ${result.message || 'something went wrong'});

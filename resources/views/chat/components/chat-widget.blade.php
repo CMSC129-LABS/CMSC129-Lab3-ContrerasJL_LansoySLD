@@ -1,5 +1,7 @@
 <div id="upv-chatbot-wrapper" data-url="{{ route('chatbot.message') }}" data-execute-url="{{ route('chatbot.execute') }}">
 
+    <script src="{{ asset('js/chatbot.js') }}"></script>
+
     <!-- chat window (toggle button lives in the navbar) -->
     <div id="chat-window" aria-label="UPV Org Hub Chatbot" role="dialog">
 
@@ -13,7 +15,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div id="chat-title">OrgBot</div>
+                    <div id="chat-title">HubbyBot</div>
                     <div id="chat-subtitle">UPV Org Hub Assistant</div>
                 </div>
             </div>
@@ -93,5 +95,3 @@
         </div>
     </div>
 </div>
-
-<script src="{{ asset('js/chatbot.js') }}"></script>
