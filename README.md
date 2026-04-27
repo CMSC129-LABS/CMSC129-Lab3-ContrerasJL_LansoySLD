@@ -1,22 +1,24 @@
 # UPV ORG HUB
 
-*A centralized directory for University of the Philippines Visayas student organizations.*
+_A centralized directory for University of the Philippines Visayas student organizations._
 
 UPV Org Hub is a web application designed for UPV constituents to explore, discover, and learn more about the various student organizations within the University of the Philippines Visayas. Users can add, edit, delete, or view existing orgs.
 
 > By Julia Contreras and Sam Lansoy
 
 ## Meet Hubby: Your AI Assistant
+
 UPV Org Hub features Hubby, an intelligent, casual, and slightly sassy AI assistant designed to help you manage and navigate the org directory using natural language.
 
 ### AI Features
-* **Conversational Search:** Ask Hubby about specific types of orgs or member counts (e.g., "baby, what are the academic orgs available?").
 
-* **AI-Powered CRUD:** Hubby can create, update, and archive organizations based on your chat commands.
+- **Conversational Search:** Ask Hubby about specific types of orgs or member counts (e.g., "baby, what are the academic orgs available?").
 
-* **Multilingual Support:** Hubby understands both English and Hiligaynon.
+- **AI-Powered CRUD:** Hubby can create, update, and archive organizations based on your chat commands.
 
-* **Persona:** Hubby is friendly, types in lowercase, and calls everyone "baby."
+- **Multilingual Support:** Hubby understands both English and Hiligaynon.
+
+- **Persona:** Hubby is friendly, types in lowercase, and calls everyone "baby."
 
 ---
 
@@ -49,19 +51,21 @@ composer install
 
 ### 3. Environment setup
 
-Copy the `.env.example` file and configure it:
+Copy the `.env.example` file and configure i
 
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-### 4. AI Configuration 
+### 4. AI Configuration
+
 To enable the AI features, you must provide a Google Gemini API Key:
 
 Obtain an API key from Google AI Studio.
 
 Add it to your .env file:
+
 ```
 GEMINI_API_KEY=your_google_gemini_api_key_here
 ```
@@ -85,6 +89,7 @@ Make sure PostgreSQL is installed and running on your computer.
 **Option B:** Using SQL
 
 Run this in Query Tool:
+
 ```bash
 CREATE DATABASE upv_orgs_db;
 ```
@@ -129,9 +134,9 @@ DB::connection()->getDatabaseName();
 
 Your expected output should be `"upv_orgs_db"`
 
-## Migration Commands 
+## Migration Commands
 
-*Migrations are used to create and manage database tables.*
+_Migrations are used to create and manage database tables._
 
 ### 1. Run Migrations
 
@@ -180,46 +185,64 @@ php artisan migrate:fresh --seed
 ```
 
 ## Application Preview
-| Dashboard |
-| :---: |
-| <img src="screenshots/dashboard.png">|
-| Archived |
- <img src="screenshots/archived.png">|
-| Search / Filter |
-| <img src="screenshots/search.png">| 
-| Add New Organization |
-| <img src="screenshots/addorg.png"> |
-| Edit Organization |
-| <img src="screenshots/editorg.png"> |
-| AI Query |
-| <img src="screenshots/aiquery.png"> |
+
+|                   Dashboard                    |
+| :--------------------------------------------: |
+|     <img src="screenshots/dashboard.png">      |
+|                    Archived                    |
+|      <img src="screenshots/archived.png">      |
+|                Search / Filter                 |
+|       <img src="screenshots/search.png">       |
+|              Add New Organization              |
+|       <img src="screenshots/addorg.png">       |
+|               Edit Organization                |
+|      <img src="screenshots/editorg.png">       |
+|                    AI Query                    |
+|      <img src="screenshots/aiquery.png">       |
+|                   AI Create                    |
+|   <img src="screenshots/chatbotcreate.jpg">    |
+|   <img src="screenshots/chatbotcreate1.jpg">   |
+|                    AI Edit                     |
+| <img src="screenshots/chatboteditconfirm.jpg"> |
+|    <img src="screenshots/chatbotedit.jpg">     |
+|                   AI Delete                    |
+| <img src="screenshots/chatbotdelconfirm.jpg">  |
+|     <img src="screenshots/chatbotdel.jpg">     |
+
 ---
 
 ## Features
-* **Centralized Directory** – A single hub to browse and discover all registered UPV student organizations.
-* **Organization Profiles** – View key details at a glance, including **Organization Type**, **Member Count**, and **Contact Email**.
-* **Full CRUD Functionality** – Ability to **Create** new entries, **Read** details, **Update** existing information, and **Delete** organizations from the list.
-* **Archive System** – A dedicated "Archived" section to manage and view organizations.
-* **Real-time Search** – Integrated search functionality to filter through the list and find specific organizations instantly.
-* **AI Integration** – Perform all the above actions simply by chatting with ***Hubby***.
+
+- **Centralized Directory** – A single hub to browse and discover all registered UPV student organizations.
+- **Organization Profiles** – View key details at a glance, including **Organization Type**, **Member Count**, and **Contact Email**.
+- **Full CRUD Functionality** – Ability to **Create** new entries, **Read** details, **Update** existing information, and **Delete** organizations from the list.
+- **Archive System** – A dedicated "Archived" section to manage and view organizations.
+- **Real-time Search** – Integrated search functionality to filter through the list and find specific organizations instantly.
+- **AI Integration** – Perform all the above actions simply by chatting with **_Hubby_**.
 
 ## MVC Architecture & Project Structure
 
 This project follows the **Model-View-Controller (MVC)** design pattern to ensure a clean separation of business logic and views:
 
 ### Models (The Data)
+
 Located in `app/Models/`, these files handle the database logic and data structure.
-* **`Organization.php`**: The primary model for managing UPV student organization data and attributes.
+
+- **`Organization.php`**: The primary model for managing UPV student organization data and attributes.
 
 ### Views (The Interface)
+
 Located in `resources/views/`, these define the user interface using Laravel's Blade engine.
-* **`orgs/`**: Contains `index.blade.php` (the main directory) and `archived.blade.php` (the archive view).
-* **`components/`**: Reusable Blade components like `modal-add-org.blade.php` and `toast.blade.php` to keep the code **DRY (Don't Repeat Yourself)**.
-* **`layouts/`**: The master `app.blade.php` file providing a consistent structure across all pages.
+
+- **`orgs/`**: Contains `index.blade.php` (the main directory) and `archived.blade.php` (the archive view).
+- **`components/`**: Reusable Blade components like `modal-add-org.blade.php` and `toast.blade.php` to keep the code **DRY (Don't Repeat Yourself)**.
+- **`layouts/`**: The master `app.blade.php` file providing a consistent structure across all pages.
 
 ### Controllers (The Logic)
+
 Located in `app/Http/Controllers/`.
-* **`OrgController.php`**: The "brain" of the app, managing data flow between the models and views, including search, storage, and update logic.
+
+- **`OrgController.php`**: The "brain" of the app, managing data flow between the models and views, including search, storage, and update logic.
 
 Here is the structured project layout:
 
@@ -229,7 +252,7 @@ UPV-Org-Hub/
 │   ├── Http/
 │   │   └── Controllers/      # OrgController.php (C in MVC)
 │   ├── Models/               # Organization.php (M in MVC)
-│   │              
+│   │
 │   └── Services/            # Hubby's AI Logic (AIService, PromptService, etc.)
 ├── database/
 │   ├── migrations/           # Database table definitions
